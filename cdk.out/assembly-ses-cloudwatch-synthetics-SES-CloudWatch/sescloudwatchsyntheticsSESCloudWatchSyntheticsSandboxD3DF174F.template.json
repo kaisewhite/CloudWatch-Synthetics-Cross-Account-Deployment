@@ -1,0 +1,253 @@
+{
+  "Resources": {
+    "CloudWatchSyntheticsrole2174489A": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com"
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "Description": "Allows Lambda functions to call AWS services on your behalf.",
+        "RoleName": "CloudWatchSynthetics-role"
+      },
+      "Metadata": {
+        "aws:cdk:path": "ses-cloudwatch-synthetics/SES-CloudWatch/Synthetics-Sandbox/CloudWatchSynthetics-role/Resource"
+      }
+    },
+    "CloudWatchSyntheticsroleDefaultPolicy567E931F": {
+      "Type": "AWS::IAM::Policy",
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "ssm:DescribeParameters",
+                "ssm:GetParameters",
+                "ssm:GetParameter",
+                "sts:GetCallerIdentity",
+                "cloudwatch:PutMetricData",
+                "ec2:CreateNetworkInterface",
+                "s3:ListAllMyBuckets",
+                "ec2:DescribeNetworkInterfaces",
+                "ec2:DeleteNetworkInterface",
+                "xray:*"
+              ],
+              "Effect": "Allow",
+              "Resource": "*"
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "PolicyName": "CloudWatchSyntheticsroleDefaultPolicy567E931F",
+        "Roles": [
+          {
+            "Ref": "CloudWatchSyntheticsrole2174489A"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "ses-cloudwatch-synthetics/SES-CloudWatch/Synthetics-Sandbox/CloudWatchSynthetics-role/DefaultPolicy/Resource"
+      }
+    },
+    "sandboxcwsynresults************useast1B837BC99": {
+      "Type": "AWS::S3::Bucket",
+      "Properties": {
+        "BucketName": "sandbox-cw-syn-results-************-us-east-1"
+      },
+      "UpdateReplacePolicy": "Retain",
+      "DeletionPolicy": "Retain",
+      "Metadata": {
+        "aws:cdk:path": "ses-cloudwatch-synthetics/SES-CloudWatch/Synthetics-Sandbox/sandbox-cw-syn-results-************-us-east-1/Resource"
+      }
+    },
+    "sandboxcwsynresults************useast1PolicyEFFFBB01": {
+      "Type": "AWS::S3::BucketPolicy",
+      "Properties": {
+        "Bucket": {
+          "Ref": "sandboxcwsynresults************useast1B837BC99"
+        },
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": "s3:*",
+              "Effect": "Allow",
+              "Principal": "*",
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "sandboxcwsynresults************useast1B837BC99",
+                    "Arn"
+                  ]
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      {
+                        "Fn::GetAtt": [
+                          "sandboxcwsynresults************useast1B837BC99",
+                          "Arn"
+                        ]
+                      },
+                      "/*"
+                    ]
+                  ]
+                }
+              ],
+              "Sid": "AllowRead"
+            }
+          ],
+          "Version": "2012-10-17"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "ses-cloudwatch-synthetics/SES-CloudWatch/Synthetics-Sandbox/sandbox-cw-syn-results-************-us-east-1/Policy/Resource"
+      }
+    },
+    "CloudWatchSyntheticsSG557C9016": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupDescription": "Allows CloudWatch Synthetic Canaries to hit Alfresco endpoints",
+        "SecurityGroupEgress": [
+          {
+            "CidrIp": "0.0.0.0/0",
+            "Description": "Allow all outbound traffic by default",
+            "IpProtocol": "-1"
+          }
+        ],
+        "VpcId": "vpc-03da4c32bdfe44451"
+      },
+      "Metadata": {
+        "aws:cdk:path": "ses-cloudwatch-synthetics/SES-CloudWatch/Synthetics-Sandbox/CloudWatchSyntheticsSG/Resource"
+      }
+    },
+    "sandboxcntsrvlive": {
+      "Type": "AWS::Synthetics::Canary",
+      "Properties": {
+        "ArtifactS3Location": {
+          "Fn::Join": [
+            "",
+            [
+              "s3://",
+              {
+                "Ref": "sandboxcwsynresults************useast1B837BC99"
+              },
+              "/canary/content-service-live"
+            ]
+          ]
+        },
+        "Code": {
+          "Handler": "handler.handler",
+          "Script": "import json\nimport http.client\nimport urllib.parse\nfrom aws_synthetics.selenium import synthetics_webdriver as syn_webdriver\nfrom aws_synthetics.common import synthetics_logger as logger\n\n\ndef verify_request(method, url, post_data=None, headers={}):\n    parsed_url = urllib.parse.urlparse(url)\n    user_agent = str(syn_webdriver.get_canary_user_agent_string())\n    if \"User-Agent\" in headers:\n        headers[\"User-Agent\"] = \" \".join([user_agent, headers[\"User-Agent\"]])\n    else:\n        headers[\"User-Agent\"] = \"{}\".format(user_agent)\n\n    logger.info(\"Making request with Method: '%s' URL: %s: Data: %s Headers: %s\" % (\n        method, url, json.dumps(post_data), json.dumps(headers)))\n\n    if parsed_url.scheme == \"https\":\n        conn = http.client.HTTPSConnection(parsed_url.hostname, parsed_url.port)\n    else:\n        conn = http.client.HTTPConnection(parsed_url.hostname, parsed_url.port)\n\n    conn.request(method, url, str(post_data), headers)\n    response = conn.getresponse()\n    logger.info(\"Status Code: %s \" % response.status)\n    logger.info(\"Response Headers: %s\" % json.dumps(response.headers.as_string()))\n\n    if not response.status or response.status < 200 or response.status > 299:\n        try:\n            logger.error(\"Response: %s\" % response.read().decode())\n        finally:\n            if response.reason:\n                conn.close()\n                raise Exception(\"Failed: %s\" % response.reason)\n            else:\n                conn.close()\n                raise Exception(\"Failed with status code: %s\" % response.status)\n\n    logger.info(\"Response: %s\" % response.read().decode())\n    logger.info(\"HTTP request successfully executed\")\n    conn.close()\n\n\ndef main():\n\n    url1 = 'https://alfresco-ses-sandbox-internal.srrcsbs.org/alfresco/api/-default-/public/alfresco/versions/1/probes/-live-'\n    method1 = 'GET'\n    postData1 = \"\"\n    headers1 = {}\n\n    verify_request(method1, url1, None, headers1)\n\n    logger.info(\"Canary successfully executed\")\n\n\ndef handler(event, context):\n    logger.info(\"Selenium Python API canary\")\n    main()"
+        },
+        "ExecutionRoleArn": {
+          "Fn::GetAtt": [
+            "CloudWatchSyntheticsrole2174489A",
+            "Arn"
+          ]
+        },
+        "Name": "sandbox-cnt-srv-live",
+        "RuntimeVersion": "syn-python-selenium-1.0",
+        "Schedule": {
+          "DurationInSeconds": "5",
+          "Expression": "rate(0 minute)"
+        },
+        "StartCanaryAfterCreation": true,
+        "VPCConfig": {
+          "SecurityGroupIds": [
+            {
+              "Fn::GetAtt": [
+                "CloudWatchSyntheticsSG557C9016",
+                "GroupId"
+              ]
+            }
+          ],
+          "SubnetIds": [
+            "subnet-0343c1b675f340001",
+            "subnet-0f630a9970b461e7a"
+          ],
+          "VpcId": "vpc-03da4c32bdfe44451"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "ses-cloudwatch-synthetics/SES-CloudWatch/Synthetics-Sandbox/sandbox-cnt-srv-live"
+      }
+    },
+    "sandboxcntsrvliveAlarm665485FD": {
+      "Type": "AWS::CloudWatch::Alarm",
+      "Properties": {
+        "ComparisonOperator": "LessThanThreshold",
+        "EvaluationPeriods": 3,
+        "AlarmActions": [
+          "arn:aws:sns:us-east-1:************:csbs-sandbox-alerts"
+        ],
+        "AlarmDescription": "Synthetics alarm metric: SuccessPercent LessThanThreshold 90",
+        "DatapointsToAlarm": 3,
+        "Dimensions": [
+          {
+            "Name": "CanaryName",
+            "Value": "sandbox-cnt-srv-live"
+          }
+        ],
+        "MetricName": "SuccessPercent",
+        "Namespace": "CloudWatchSynthetics",
+        "Period": 300,
+        "Statistic": "Average",
+        "Threshold": 70,
+        "TreatMissingData": "ignore"
+      },
+      "Metadata": {
+        "aws:cdk:path": "ses-cloudwatch-synthetics/SES-CloudWatch/Synthetics-Sandbox/sandbox-cnt-srv-live-Alarm/Resource"
+      }
+    },
+    "CDKMetadata": {
+      "Type": "AWS::CDK::Metadata",
+      "Properties": {
+        "Analytics": "v2:deflate64:H4sIAAAAAAAAE1WOwU4DMQxEv6V316X0Qm/QPfRaLfxA5Bpt2N24ih1VUZR/Z8OCgNM8j8cj7/H4hA+bZ3fXLV3HXSGJjOXVHI3QSVCLiQx6VkmRGLr38MMV2lHxbsbSy7Tuml5k8pTbuFIFPWA5JRrZmvtNq/yG/84VmB6XN5hS9JbPUdKtZf4ZS29QfJObp5NTBs3BBjZPiku0c8HFDDRJut6d0YDlZXJxbjVfUGuFS7ZBwu6AR9xvPtT7bUzB/MzYr/oJaguLjyABAAA="
+      },
+      "Metadata": {
+        "aws:cdk:path": "ses-cloudwatch-synthetics/SES-CloudWatch/Synthetics-Sandbox/CDKMetadata/Default"
+      }
+    }
+  },
+  "Parameters": {
+    "BootstrapVersion": {
+      "Type": "AWS::SSM::Parameter::Value<String>",
+      "Default": "/cdk-bootstrap/hnb659fds/version",
+      "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store."
+    }
+  },
+  "Rules": {
+    "CheckBootstrapVersion": {
+      "Assertions": [
+        {
+          "Assert": {
+            "Fn::Not": [
+              {
+                "Fn::Contains": [
+                  [
+                    "1",
+                    "2",
+                    "3"
+                  ],
+                  {
+                    "Ref": "BootstrapVersion"
+                  }
+                ]
+              }
+            ]
+          },
+          "AssertDescription": "CDK bootstrap stack version 4 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI."
+        }
+      ]
+    }
+  }
+}

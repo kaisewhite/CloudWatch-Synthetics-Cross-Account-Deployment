@@ -1,0 +1,20 @@
+{
+  "version": "9.0.0",
+  "files": {
+    "4dcdac04153234993ada8e481c29b835c78acaf6b1b74dc5c25a53a58f7abbb3": {
+      "source": {
+        "path": "sescloudwatchsyntheticsSESSandboxCloudwatchSyntheticsE3F8D8B6.template.json",
+        "packaging": "file"
+      },
+      "destinations": {
+        "************-us-east-1": {
+          "bucketName": "cdk-hnb659fds-assets-************-us-east-1",
+          "objectKey": "4dcdac04153234993ada8e481c29b835c78acaf6b1b74dc5c25a53a58f7abbb3.json",
+          "region": "us-east-1",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::************:role/cdk-hnb659fds-file-publishing-role-************-us-east-1"
+        }
+      }
+    }
+  },
+  "dockerImages": {}
+}

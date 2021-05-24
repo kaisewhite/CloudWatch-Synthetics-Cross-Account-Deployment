@@ -1,0 +1,734 @@
+{
+  "Resources": {
+    "CloudWatchSyntheticsrole2174489A": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com"
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "Description": "Allows Lambda functions to call AWS services on your behalf.",
+        "RoleName": "CloudWatchSynthetics-role"
+      },
+      "Metadata": {
+        "aws:cdk:path": "ses-cloudwatch-synthetics/SES-Sandbox/Cloudwatch-Synthetics/CloudWatchSynthetics-role/Resource"
+      }
+    },
+    "CloudWatchSyntheticsroleDefaultPolicy567E931F": {
+      "Type": "AWS::IAM::Policy",
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "ssm:DescribeParameters",
+                "ssm:GetParameters",
+                "ssm:GetParameter",
+                "sts:GetCallerIdentity",
+                "cloudwatch:PutMetricData",
+                "ec2:CreateNetworkInterface",
+                "s3:ListAllMyBuckets",
+                "ec2:DescribeNetworkInterfaces",
+                "ec2:DeleteNetworkInterface",
+                "xray:*"
+              ],
+              "Effect": "Allow",
+              "Resource": "*"
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "PolicyName": "CloudWatchSyntheticsroleDefaultPolicy567E931F",
+        "Roles": [
+          {
+            "Ref": "CloudWatchSyntheticsrole2174489A"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "ses-cloudwatch-synthetics/SES-Sandbox/Cloudwatch-Synthetics/CloudWatchSynthetics-role/DefaultPolicy/Resource"
+      }
+    },
+    "sandboxcwsynresults************useast1B837BC99": {
+      "Type": "AWS::S3::Bucket",
+      "Properties": {
+        "BucketName": "sandbox-cw-syn-results-************-us-east-1"
+      },
+      "UpdateReplacePolicy": "Retain",
+      "DeletionPolicy": "Retain",
+      "Metadata": {
+        "aws:cdk:path": "ses-cloudwatch-synthetics/SES-Sandbox/Cloudwatch-Synthetics/sandbox-cw-syn-results-************-us-east-1/Resource"
+      }
+    },
+    "sandboxcwsynresults************useast1PolicyEFFFBB01": {
+      "Type": "AWS::S3::BucketPolicy",
+      "Properties": {
+        "Bucket": {
+          "Ref": "sandboxcwsynresults************useast1B837BC99"
+        },
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": "s3:*",
+              "Effect": "Allow",
+              "Principal": "*",
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "sandboxcwsynresults************useast1B837BC99",
+                    "Arn"
+                  ]
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      {
+                        "Fn::GetAtt": [
+                          "sandboxcwsynresults************useast1B837BC99",
+                          "Arn"
+                        ]
+                      },
+                      "/*"
+                    ]
+                  ]
+                }
+              ],
+              "Sid": "AllowRead"
+            }
+          ],
+          "Version": "2012-10-17"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "ses-cloudwatch-synthetics/SES-Sandbox/Cloudwatch-Synthetics/sandbox-cw-syn-results-************-us-east-1/Policy/Resource"
+      }
+    },
+    "CloudWatchSyntheticsSG557C9016": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupDescription": "Allows CloudWatch Synthetic Canaries to hit Alfresco endpoints",
+        "SecurityGroupEgress": [
+          {
+            "CidrIp": "0.0.0.0/0",
+            "Description": "Allow all outbound traffic by default",
+            "IpProtocol": "-1"
+          }
+        ],
+        "VpcId": "vpc-03da4c32bdfe44451"
+      },
+      "Metadata": {
+        "aws:cdk:path": "ses-cloudwatch-synthetics/SES-Sandbox/Cloudwatch-Synthetics/CloudWatchSyntheticsSG/Resource"
+      }
+    },
+    "sandboxcntsrvlive": {
+      "Type": "AWS::Synthetics::Canary",
+      "Properties": {
+        "ArtifactS3Location": {
+          "Fn::Join": [
+            "",
+            [
+              "s3://",
+              {
+                "Ref": "sandboxcwsynresults************useast1B837BC99"
+              },
+              "/canary/content-service-live"
+            ]
+          ]
+        },
+        "Code": {
+          "Handler": "handler.handler",
+          "Script": "import json\nimport http.client\nimport urllib.parse\nfrom aws_synthetics.selenium import synthetics_webdriver as syn_webdriver\nfrom aws_synthetics.common import synthetics_logger as logger\n\n\ndef verify_request(method, url, post_data=None, headers={}):\n    parsed_url = urllib.parse.urlparse(url)\n    user_agent = str(syn_webdriver.get_canary_user_agent_string())\n    if \"User-Agent\" in headers:\n        headers[\"User-Agent\"] = \" \".join([user_agent, headers[\"User-Agent\"]])\n    else:\n        headers[\"User-Agent\"] = \"{}\".format(user_agent)\n\n    logger.info(\"Making request with Method: '%s' URL: %s: Data: %s Headers: %s\" % (\n        method, url, json.dumps(post_data), json.dumps(headers)))\n\n    if parsed_url.scheme == \"https\":\n        conn = http.client.HTTPSConnection(parsed_url.hostname, parsed_url.port)\n    else:\n        conn = http.client.HTTPConnection(parsed_url.hostname, parsed_url.port)\n\n    conn.request(method, url, str(post_data), headers)\n    response = conn.getresponse()\n    logger.info(\"Status Code: %s \" % response.status)\n    logger.info(\"Response Headers: %s\" % json.dumps(response.headers.as_string()))\n\n    if not response.status or response.status < 200 or response.status > 299:\n        try:\n            logger.error(\"Response: %s\" % response.read().decode())\n        finally:\n            if response.reason:\n                conn.close()\n                raise Exception(\"Failed: %s\" % response.reason)\n            else:\n                conn.close()\n                raise Exception(\"Failed with status code: %s\" % response.status)\n\n    logger.info(\"Response: %s\" % response.read().decode())\n    logger.info(\"HTTP request successfully executed\")\n    conn.close()\n\n\ndef main():\n\n    url1 = 'https://alfresco-ses-sandbox-internal.srrcsbs.org/alfresco/api/-default-/public/alfresco/versions/1/probes/-live-'\n    method1 = 'GET'\n    postData1 = \"\"\n    headers1 = {}\n\n    verify_request(method1, url1, None, headers1)\n\n    logger.info(\"Canary successfully executed\")\n\n\ndef handler(event, context):\n    logger.info(\"Selenium Python API canary\")\n    main()"
+        },
+        "ExecutionRoleArn": {
+          "Fn::GetAtt": [
+            "CloudWatchSyntheticsrole2174489A",
+            "Arn"
+          ]
+        },
+        "Name": "sandbox-cnt-srv-live",
+        "RuntimeVersion": "syn-python-selenium-1.0",
+        "Schedule": {
+          "DurationInSeconds": "0",
+          "Expression": "rate(5 minutes)"
+        },
+        "StartCanaryAfterCreation": true,
+        "VPCConfig": {
+          "SecurityGroupIds": [
+            {
+              "Fn::GetAtt": [
+                "CloudWatchSyntheticsSG557C9016",
+                "GroupId"
+              ]
+            }
+          ],
+          "SubnetIds": [
+            "subnet-0343c1b675f340001",
+            "subnet-0f630a9970b461e7a"
+          ],
+          "VpcId": "vpc-03da4c32bdfe44451"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "ses-cloudwatch-synthetics/SES-Sandbox/Cloudwatch-Synthetics/sandbox-cnt-srv-live"
+      }
+    },
+    "sandboxcntsrvliveAlarm665485FD": {
+      "Type": "AWS::CloudWatch::Alarm",
+      "Properties": {
+        "ComparisonOperator": "LessThanThreshold",
+        "EvaluationPeriods": 3,
+        "AlarmActions": [
+          "arn:aws:sns:us-east-1:************:csbs-sandbox-alerts"
+        ],
+        "AlarmDescription": "Synthetics alarm metric: SuccessPercent LessThanThreshold 90",
+        "AlarmName": "sandbox-Alfresco-content-service-live-Unhealthy-API-Endpoint",
+        "DatapointsToAlarm": 2,
+        "Dimensions": [
+          {
+            "Name": "CanaryName",
+            "Value": "sandbox-cnt-srv-live"
+          }
+        ],
+        "MetricName": "SuccessPercent",
+        "Namespace": "CloudWatchSynthetics",
+        "Period": 300,
+        "Statistic": "Average",
+        "Threshold": 85,
+        "TreatMissingData": "ignore"
+      },
+      "Metadata": {
+        "aws:cdk:path": "ses-cloudwatch-synthetics/SES-Sandbox/Cloudwatch-Synthetics/sandbox-cnt-srv-live-Alarm/Resource"
+      }
+    },
+    "sandboxcntsrvrdy": {
+      "Type": "AWS::Synthetics::Canary",
+      "Properties": {
+        "ArtifactS3Location": {
+          "Fn::Join": [
+            "",
+            [
+              "s3://",
+              {
+                "Ref": "sandboxcwsynresults************useast1B837BC99"
+              },
+              "/canary/content_service_ready"
+            ]
+          ]
+        },
+        "Code": {
+          "Handler": "handler.handler",
+          "Script": "import json\nimport http.client\nimport urllib.parse\nfrom aws_synthetics.selenium import synthetics_webdriver as syn_webdriver\nfrom aws_synthetics.common import synthetics_logger as logger\n\n\ndef verify_request(method, url, post_data=None, headers={}):\n    parsed_url = urllib.parse.urlparse(url)\n    user_agent = str(syn_webdriver.get_canary_user_agent_string())\n    if \"User-Agent\" in headers:\n        headers[\"User-Agent\"] = \" \".join([user_agent, headers[\"User-Agent\"]])\n    else:\n        headers[\"User-Agent\"] = \"{}\".format(user_agent)\n\n    logger.info(\"Making request with Method: '%s' URL: %s: Data: %s Headers: %s\" % (\n        method, url, json.dumps(post_data), json.dumps(headers)))\n\n    if parsed_url.scheme == \"https\":\n        conn = http.client.HTTPSConnection(parsed_url.hostname, parsed_url.port)\n    else:\n        conn = http.client.HTTPConnection(parsed_url.hostname, parsed_url.port)\n\n    conn.request(method, url, str(post_data), headers)\n    response = conn.getresponse()\n    logger.info(\"Status Code: %s \" % response.status)\n    logger.info(\"Response Headers: %s\" % json.dumps(response.headers.as_string()))\n\n    if not response.status or response.status < 200 or response.status > 299:\n        try:\n            logger.error(\"Response: %s\" % response.read().decode())\n        finally:\n            if response.reason:\n                conn.close()\n                raise Exception(\"Failed: %s\" % response.reason)\n            else:\n                conn.close()\n                raise Exception(\"Failed with status code: %s\" % response.status)\n\n    logger.info(\"Response: %s\" % response.read().decode())\n    logger.info(\"HTTP request successfully executed\")\n    conn.close()\n\n\ndef main():\n\n    url1 = 'https://alfresco-ses-sandbox-internal.srrcsbs.org/alfresco/api/-default-/public/alfresco/versions/1/probes/-ready-'\n    method1 = 'GET'\n    postData1 = \"\"\n    headers1 = {}\n\n    verify_request(method1, url1, None, headers1)\n\n    logger.info(\"Canary successfully executed\")\n\n\ndef handler(event, context):\n    logger.info(\"Selenium Python API canary\")\n    main()"
+        },
+        "ExecutionRoleArn": {
+          "Fn::GetAtt": [
+            "CloudWatchSyntheticsrole2174489A",
+            "Arn"
+          ]
+        },
+        "Name": "sandbox-cnt-srv-rdy",
+        "RuntimeVersion": "syn-python-selenium-1.0",
+        "Schedule": {
+          "DurationInSeconds": "0",
+          "Expression": "rate(5 minutes)"
+        },
+        "StartCanaryAfterCreation": true,
+        "VPCConfig": {
+          "SecurityGroupIds": [
+            {
+              "Fn::GetAtt": [
+                "CloudWatchSyntheticsSG557C9016",
+                "GroupId"
+              ]
+            }
+          ],
+          "SubnetIds": [
+            "subnet-0343c1b675f340001",
+            "subnet-0f630a9970b461e7a"
+          ],
+          "VpcId": "vpc-03da4c32bdfe44451"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "ses-cloudwatch-synthetics/SES-Sandbox/Cloudwatch-Synthetics/sandbox-cnt-srv-rdy"
+      }
+    },
+    "sandboxcntsrvrdyAlarm2140A842": {
+      "Type": "AWS::CloudWatch::Alarm",
+      "Properties": {
+        "ComparisonOperator": "LessThanThreshold",
+        "EvaluationPeriods": 3,
+        "AlarmActions": [
+          "arn:aws:sns:us-east-1:************:csbs-sandbox-alerts"
+        ],
+        "AlarmDescription": "Synthetics alarm metric: SuccessPercent LessThanThreshold 90",
+        "AlarmName": "sandbox-Alfresco-content_service_ready-Unhealthy-API-Endpoint",
+        "DatapointsToAlarm": 2,
+        "Dimensions": [
+          {
+            "Name": "CanaryName",
+            "Value": "sandbox-cnt-srv-rdy"
+          }
+        ],
+        "MetricName": "SuccessPercent",
+        "Namespace": "CloudWatchSynthetics",
+        "Period": 300,
+        "Statistic": "Average",
+        "Threshold": 85,
+        "TreatMissingData": "ignore"
+      },
+      "Metadata": {
+        "aws:cdk:path": "ses-cloudwatch-synthetics/SES-Sandbox/Cloudwatch-Synthetics/sandbox-cnt-srv-rdy-Alarm/Resource"
+      }
+    },
+    "sandboxcntsrvsum": {
+      "Type": "AWS::Synthetics::Canary",
+      "Properties": {
+        "ArtifactS3Location": {
+          "Fn::Join": [
+            "",
+            [
+              "s3://",
+              {
+                "Ref": "sandboxcwsynresults************useast1B837BC99"
+              },
+              "/canary/content_service_summary"
+            ]
+          ]
+        },
+        "Code": {
+          "Handler": "handler.handler",
+          "Script": "import json\nimport http.client\nimport urllib.parse\nfrom base64 import b64encode\n#import base64\nimport boto3\nfrom aws_synthetics.selenium import synthetics_webdriver as syn_webdriver\nfrom aws_synthetics.common import synthetics_logger as logger\n\n\ndef verify_request(method, url, post_data=None, headers={}):\n    parsed_url = urllib.parse.urlparse(url)\n    user_agent = str(syn_webdriver.get_canary_user_agent_string())\n    if \"User-Agent\" in headers:\n        headers[\"User-Agent\"] = \" \".join([user_agent, headers[\"User-Agent\"]])\n    else:\n        headers[\"User-Agent\"] = \"{}\".format(user_agent)\n\n    logger.info(\"Making request with Method: '%s' URL: %s: Data: %s Headers: %s\" % (\n        method, url, json.dumps(post_data), json.dumps(headers)))\n\n    if parsed_url.scheme == \"https\":\n        conn = http.client.HTTPSConnection(\n            parsed_url.hostname, parsed_url.port)\n    else:\n        conn = http.client.HTTPConnection(parsed_url.hostname, parsed_url.port)\n\n    conn.request(method, url, str(post_data), headers)\n    response = conn.getresponse()\n    logger.info(\"Status Code: %s \" % response.status)\n    logger.info(\"Response Headers: %s\" %\n                json.dumps(response.headers.as_string()))\n\n    if not response.status or response.status < 200 or response.status > 299:\n        try:\n            logger.error(\"Response: %s\" % response.read().decode())\n        finally:\n            if response.reason:\n                conn.close()\n                raise Exception(\"Failed: %s\" % response.reason)\n            else:\n                conn.close()\n                raise Exception(\"Failed with status code: %s\" %\n                                response.status)\n\n    logger.info(\"Response: %s\" % response.read().decode())\n    logger.info(\"HTTP request successfully executed\")\n    conn.close()\n\n\ndef main():\n\n    ssm = boto3.client('ssm')\n    parameter = ssm.get_parameter(\n        Name=f'/cft/ses/sandbox-alfresco-alfresco_password', WithDecryption=True)\n    username = \"admin\"\n    password = (parameter['Parameter']['Value'])\n\n    url1 = f'https://alfresco-ses-sandbox-internal.srrcsbs.org/alfresco/s/enterprise/admin/admin-systemsummary'\n    method1 = 'GET'\n    postData1 = \"\"\n    headers1 = {\n        \"Authorization\": \"Basic {}\".format(\n            b64encode(bytes(f\"{username}:{password}\", \"utf-8\")).decode(\"ascii\")\n        )\n    }\n\n    verify_request(method1, url1, None, headers1)\n\n    logger.info(\"Canary successfully executed\")\n\n\ndef handler(event, context):\n    logger.info(\"Selenium Python API canary\")\n    main() "
+        },
+        "ExecutionRoleArn": {
+          "Fn::GetAtt": [
+            "CloudWatchSyntheticsrole2174489A",
+            "Arn"
+          ]
+        },
+        "Name": "sandbox-cnt-srv-sum",
+        "RuntimeVersion": "syn-python-selenium-1.0",
+        "Schedule": {
+          "DurationInSeconds": "0",
+          "Expression": "rate(5 minutes)"
+        },
+        "StartCanaryAfterCreation": true,
+        "VPCConfig": {
+          "SecurityGroupIds": [
+            {
+              "Fn::GetAtt": [
+                "CloudWatchSyntheticsSG557C9016",
+                "GroupId"
+              ]
+            }
+          ],
+          "SubnetIds": [
+            "subnet-0343c1b675f340001",
+            "subnet-0f630a9970b461e7a"
+          ],
+          "VpcId": "vpc-03da4c32bdfe44451"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "ses-cloudwatch-synthetics/SES-Sandbox/Cloudwatch-Synthetics/sandbox-cnt-srv-sum"
+      }
+    },
+    "sandboxcntsrvsumAlarmD629A27C": {
+      "Type": "AWS::CloudWatch::Alarm",
+      "Properties": {
+        "ComparisonOperator": "LessThanThreshold",
+        "EvaluationPeriods": 3,
+        "AlarmActions": [
+          "arn:aws:sns:us-east-1:************:csbs-sandbox-alerts"
+        ],
+        "AlarmDescription": "Synthetics alarm metric: SuccessPercent LessThanThreshold 90",
+        "AlarmName": "sandbox-Alfresco-content_service_summary-Unhealthy-API-Endpoint",
+        "DatapointsToAlarm": 2,
+        "Dimensions": [
+          {
+            "Name": "CanaryName",
+            "Value": "sandbox-cnt-srv-sum"
+          }
+        ],
+        "MetricName": "SuccessPercent",
+        "Namespace": "CloudWatchSynthetics",
+        "Period": 300,
+        "Statistic": "Average",
+        "Threshold": 85,
+        "TreatMissingData": "ignore"
+      },
+      "Metadata": {
+        "aws:cdk:path": "ses-cloudwatch-synthetics/SES-Sandbox/Cloudwatch-Synthetics/sandbox-cnt-srv-sum-Alarm/Resource"
+      }
+    },
+    "sandboxdwldsrv": {
+      "Type": "AWS::Synthetics::Canary",
+      "Properties": {
+        "ArtifactS3Location": {
+          "Fn::Join": [
+            "",
+            [
+              "s3://",
+              {
+                "Ref": "sandboxcwsynresults************useast1B837BC99"
+              },
+              "/canary/download_service"
+            ]
+          ]
+        },
+        "Code": {
+          "Handler": "handler.handler",
+          "Script": "import json\nimport http.client\nimport urllib.parse\nfrom base64 import b64encode\n#import base64\nimport boto3\nfrom aws_synthetics.selenium import synthetics_webdriver as syn_webdriver\nfrom aws_synthetics.common import synthetics_logger as logger\n\ndef get_token():\n\n    ssm = boto3.client('ssm')\n    parameter = ssm.get_parameter(\n        Name=f'/cft/ses/sandbox-alfresco-token_password', WithDecryption=True)\n    username = f'sandbox-token-ses-admin'\n    password = (parameter['Parameter']['Value'])\n\n    conn = http.client.HTTPSConnection(\n        \"alfresco-tokenservice-ses-dev-internal.srrcsbs.org\")\n\n    payload = json.dumps({\n        \"download\": True,\n        \"preview\": True,\n        \"nodeId\": \"5fa74ad3-9b5b-461b-9df5-de407f1f4fe7\",\n        \"user\": \"Jane Doe\"\n    })\n    headers = {\n        'Authorization': 'Basic {}'.format(\n            b64encode(bytes(f'{username}:{password}',\n                            'utf-8')).decode('ascii')\n        ),\n        'Content-Type': 'application/json',\n    }\n    conn.request(\"POST\", \"/tokenservice/services/api/token\", payload, headers)\n    res = conn.getresponse()\n    data = res.read()\n    logger.info(data.decode(\"utf-8\"))\n    token_id = json.loads(data.decode(\"utf-8\"))[\"tokenId\"]\n\n    logger.info(\"Canary successfully executed\")\n    return token_id\n\n\ndef main():\n\n    token_id = get_token()\n    \n    conn = http.client.HTTPSConnection(f'alfresco-ses-downloadservice-sandbox-internal.srrcsbs.org')\n    payload = ''\n    headers = {}\n    conn.request(\"GET\", f'/downloadservice/download?documentId={token_id}', payload, headers)\n    res = conn.getresponse()\n    data = res.read()\n    logger.info(data)\n\ndef handler(event, context):\n    logger.info(\"Selenium Python API canary\")\n    main()\n"
+        },
+        "ExecutionRoleArn": {
+          "Fn::GetAtt": [
+            "CloudWatchSyntheticsrole2174489A",
+            "Arn"
+          ]
+        },
+        "Name": "sandbox-dwld-srv",
+        "RuntimeVersion": "syn-python-selenium-1.0",
+        "Schedule": {
+          "DurationInSeconds": "0",
+          "Expression": "rate(5 minutes)"
+        },
+        "StartCanaryAfterCreation": true,
+        "VPCConfig": {
+          "SecurityGroupIds": [
+            {
+              "Fn::GetAtt": [
+                "CloudWatchSyntheticsSG557C9016",
+                "GroupId"
+              ]
+            }
+          ],
+          "SubnetIds": [
+            "subnet-0343c1b675f340001",
+            "subnet-0f630a9970b461e7a"
+          ],
+          "VpcId": "vpc-03da4c32bdfe44451"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "ses-cloudwatch-synthetics/SES-Sandbox/Cloudwatch-Synthetics/sandbox-dwld-srv"
+      }
+    },
+    "sandboxdwldsrvAlarm60496F3E": {
+      "Type": "AWS::CloudWatch::Alarm",
+      "Properties": {
+        "ComparisonOperator": "LessThanThreshold",
+        "EvaluationPeriods": 3,
+        "AlarmActions": [
+          "arn:aws:sns:us-east-1:************:csbs-sandbox-alerts"
+        ],
+        "AlarmDescription": "Synthetics alarm metric: SuccessPercent LessThanThreshold 90",
+        "AlarmName": "sandbox-Alfresco-download_service-Unhealthy-API-Endpoint",
+        "DatapointsToAlarm": 2,
+        "Dimensions": [
+          {
+            "Name": "CanaryName",
+            "Value": "sandbox-dwld-srv"
+          }
+        ],
+        "MetricName": "SuccessPercent",
+        "Namespace": "CloudWatchSynthetics",
+        "Period": 300,
+        "Statistic": "Average",
+        "Threshold": 85,
+        "TreatMissingData": "ignore"
+      },
+      "Metadata": {
+        "aws:cdk:path": "ses-cloudwatch-synthetics/SES-Sandbox/Cloudwatch-Synthetics/sandbox-dwld-srv-Alarm/Resource"
+      }
+    },
+    "sandboxpdfsrv": {
+      "Type": "AWS::Synthetics::Canary",
+      "Properties": {
+        "ArtifactS3Location": {
+          "Fn::Join": [
+            "",
+            [
+              "s3://",
+              {
+                "Ref": "sandboxcwsynresults************useast1B837BC99"
+              },
+              "/canary/pdftron_service"
+            ]
+          ]
+        },
+        "Code": {
+          "Handler": "handler.handler",
+          "Script": "from aws_synthetics.selenium import synthetics_webdriver as syn_webdriver\nfrom aws_synthetics.common import synthetics_logger as logger\n\n\ndef main():\n\n    url = f'https://alfresco-ses-tronwebserver-sandbox.srrcsbs.org/preview/?filename=budget.xls&documentId=19a591d23db0786ff8e779df9a3923e8fe1840a655f91cc039831ef26d139280'\n\n    # Set screenshot option\n    takeScreenshot = True\n\n    browser = syn_webdriver.Chrome()\n    browser.get(url)\n\n    if takeScreenshot:\n        browser.save_screenshot(\"loaded.png\")\n\n    response_code = syn_webdriver.get_http_response(url)\n    if not response_code or response_code < 200 or response_code > 299:\n        raise Exception(\"Failed to load page!\")\n    logger.info(\"Canary successfully executed\")\n\n\ndef handler(event, context):\n    # user defined log statements using synthetics_logger\n    logger.info(\"Selenium Python heartbeat canary\")\n    return main() "
+        },
+        "ExecutionRoleArn": {
+          "Fn::GetAtt": [
+            "CloudWatchSyntheticsrole2174489A",
+            "Arn"
+          ]
+        },
+        "Name": "sandbox-pdf-srv",
+        "RuntimeVersion": "syn-python-selenium-1.0",
+        "Schedule": {
+          "DurationInSeconds": "0",
+          "Expression": "rate(5 minutes)"
+        },
+        "StartCanaryAfterCreation": true,
+        "VPCConfig": {
+          "SecurityGroupIds": [
+            {
+              "Fn::GetAtt": [
+                "CloudWatchSyntheticsSG557C9016",
+                "GroupId"
+              ]
+            }
+          ],
+          "SubnetIds": [
+            "subnet-0343c1b675f340001",
+            "subnet-0f630a9970b461e7a"
+          ],
+          "VpcId": "vpc-03da4c32bdfe44451"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "ses-cloudwatch-synthetics/SES-Sandbox/Cloudwatch-Synthetics/sandbox-pdf-srv"
+      }
+    },
+    "sandboxpdfsrvAlarmED66B802": {
+      "Type": "AWS::CloudWatch::Alarm",
+      "Properties": {
+        "ComparisonOperator": "LessThanThreshold",
+        "EvaluationPeriods": 3,
+        "AlarmActions": [
+          "arn:aws:sns:us-east-1:************:csbs-sandbox-alerts"
+        ],
+        "AlarmDescription": "Synthetics alarm metric: SuccessPercent LessThanThreshold 90",
+        "AlarmName": "sandbox-Alfresco-pdftron_service-Unhealthy-API-Endpoint",
+        "DatapointsToAlarm": 2,
+        "Dimensions": [
+          {
+            "Name": "CanaryName",
+            "Value": "sandbox-pdf-srv"
+          }
+        ],
+        "MetricName": "SuccessPercent",
+        "Namespace": "CloudWatchSynthetics",
+        "Period": 300,
+        "Statistic": "Average",
+        "Threshold": 85,
+        "TreatMissingData": "ignore"
+      },
+      "Metadata": {
+        "aws:cdk:path": "ses-cloudwatch-synthetics/SES-Sandbox/Cloudwatch-Synthetics/sandbox-pdf-srv-Alarm/Resource"
+      }
+    },
+    "sandboxsharesrv": {
+      "Type": "AWS::Synthetics::Canary",
+      "Properties": {
+        "ArtifactS3Location": {
+          "Fn::Join": [
+            "",
+            [
+              "s3://",
+              {
+                "Ref": "sandboxcwsynresults************useast1B837BC99"
+              },
+              "/canary/share_service"
+            ]
+          ]
+        },
+        "Code": {
+          "Handler": "handler.handler",
+          "Script": "from aws_synthetics.selenium import synthetics_webdriver as syn_webdriver\nfrom aws_synthetics.common import synthetics_logger as logger\n\n\ndef main():\n\n    url = f'https://alfresco-share-ses-sandbox-internal.srrcsbs.org/share/page/user/admin/dashboard'\n\n    # Set screenshot option\n    takeScreenshot = True\n\n    browser = syn_webdriver.Chrome()\n    browser.get(url)\n\n    if takeScreenshot:\n        browser.save_screenshot(\"loaded.png\")\n\n    response_code = syn_webdriver.get_http_response(url)\n    if not response_code or response_code < 200 or response_code > 299:\n        raise Exception(\"Failed to load page!\")\n    logger.info(\"Canary successfully executed\")\n\n\ndef handler(event, context):\n    # user defined log statements using synthetics_logger\n    logger.info(\"Selenium Python heartbeat canary\")\n    return main() "
+        },
+        "ExecutionRoleArn": {
+          "Fn::GetAtt": [
+            "CloudWatchSyntheticsrole2174489A",
+            "Arn"
+          ]
+        },
+        "Name": "sandbox-share-srv",
+        "RuntimeVersion": "syn-python-selenium-1.0",
+        "Schedule": {
+          "DurationInSeconds": "0",
+          "Expression": "rate(5 minutes)"
+        },
+        "StartCanaryAfterCreation": true,
+        "VPCConfig": {
+          "SecurityGroupIds": [
+            {
+              "Fn::GetAtt": [
+                "CloudWatchSyntheticsSG557C9016",
+                "GroupId"
+              ]
+            }
+          ],
+          "SubnetIds": [
+            "subnet-0343c1b675f340001",
+            "subnet-0f630a9970b461e7a"
+          ],
+          "VpcId": "vpc-03da4c32bdfe44451"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "ses-cloudwatch-synthetics/SES-Sandbox/Cloudwatch-Synthetics/sandbox-share-srv"
+      }
+    },
+    "sandboxsharesrvAlarm5C31B1BD": {
+      "Type": "AWS::CloudWatch::Alarm",
+      "Properties": {
+        "ComparisonOperator": "LessThanThreshold",
+        "EvaluationPeriods": 3,
+        "AlarmActions": [
+          "arn:aws:sns:us-east-1:************:csbs-sandbox-alerts"
+        ],
+        "AlarmDescription": "Synthetics alarm metric: SuccessPercent LessThanThreshold 90",
+        "AlarmName": "sandbox-Alfresco-share_service-Unhealthy-API-Endpoint",
+        "DatapointsToAlarm": 2,
+        "Dimensions": [
+          {
+            "Name": "CanaryName",
+            "Value": "sandbox-share-srv"
+          }
+        ],
+        "MetricName": "SuccessPercent",
+        "Namespace": "CloudWatchSynthetics",
+        "Period": 300,
+        "Statistic": "Average",
+        "Threshold": 85,
+        "TreatMissingData": "ignore"
+      },
+      "Metadata": {
+        "aws:cdk:path": "ses-cloudwatch-synthetics/SES-Sandbox/Cloudwatch-Synthetics/sandbox-share-srv-Alarm/Resource"
+      }
+    },
+    "sandboxtokensrv": {
+      "Type": "AWS::Synthetics::Canary",
+      "Properties": {
+        "ArtifactS3Location": {
+          "Fn::Join": [
+            "",
+            [
+              "s3://",
+              {
+                "Ref": "sandboxcwsynresults************useast1B837BC99"
+              },
+              "/canary/token_service"
+            ]
+          ]
+        },
+        "Code": {
+          "Handler": "handler.handler",
+          "Script": "import json\nimport http.client\nimport urllib.parse\nfrom base64 import b64encode\n#import base64\nimport boto3\nfrom aws_synthetics.selenium import synthetics_webdriver as syn_webdriver\nfrom aws_synthetics.common import synthetics_logger as logger\n\n\ndef main():\n\n    ssm = boto3.client('ssm')\n    parameter = ssm.get_parameter(\n        Name=f'/cft/ses/sandbox-alfresco-token_password', WithDecryption=True)\n    username = f'sandbox-token-ses-admin'\n    password = (parameter['Parameter']['Value'])\n\n    conn = http.client.HTTPSConnection(\n        \"alfresco-tokenservice-ses-dev-internal.srrcsbs.org\")\n\n    payload = json.dumps({\n        \"download\": True,\n        \"preview\": True,\n        \"nodeId\": \"5fa74ad3-9b5b-461b-9df5-de407f1f4fe7\",\n        \"user\": \"Jane Doe\"\n    })\n    headers = {\n        'Authorization': 'Basic {}'.format(\n            b64encode(bytes(f'{username}:{password}',\n                            'utf-8')).decode('ascii')\n        ),\n        'Content-Type': 'application/json'\n    }\n    conn.request(\"POST\", \"/tokenservice/services/api/token\", payload, headers)\n    res = conn.getresponse()\n    data = res.read()\n    print(data.decode(\"utf-8\"))\n\n    logger.info(\"Canary successfully executed\")\n\n\ndef handler(event, context):\n    logger.info(\"Selenium Python API canary\")\n    main() "
+        },
+        "ExecutionRoleArn": {
+          "Fn::GetAtt": [
+            "CloudWatchSyntheticsrole2174489A",
+            "Arn"
+          ]
+        },
+        "Name": "sandbox-token-srv",
+        "RuntimeVersion": "syn-python-selenium-1.0",
+        "Schedule": {
+          "DurationInSeconds": "0",
+          "Expression": "rate(5 minutes)"
+        },
+        "StartCanaryAfterCreation": true,
+        "VPCConfig": {
+          "SecurityGroupIds": [
+            {
+              "Fn::GetAtt": [
+                "CloudWatchSyntheticsSG557C9016",
+                "GroupId"
+              ]
+            }
+          ],
+          "SubnetIds": [
+            "subnet-0343c1b675f340001",
+            "subnet-0f630a9970b461e7a"
+          ],
+          "VpcId": "vpc-03da4c32bdfe44451"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "ses-cloudwatch-synthetics/SES-Sandbox/Cloudwatch-Synthetics/sandbox-token-srv"
+      }
+    },
+    "sandboxtokensrvAlarm8E56666A": {
+      "Type": "AWS::CloudWatch::Alarm",
+      "Properties": {
+        "ComparisonOperator": "LessThanThreshold",
+        "EvaluationPeriods": 3,
+        "AlarmActions": [
+          "arn:aws:sns:us-east-1:************:csbs-sandbox-alerts"
+        ],
+        "AlarmDescription": "Synthetics alarm metric: SuccessPercent LessThanThreshold 90",
+        "AlarmName": "sandbox-Alfresco-token_service-Unhealthy-API-Endpoint",
+        "DatapointsToAlarm": 2,
+        "Dimensions": [
+          {
+            "Name": "CanaryName",
+            "Value": "sandbox-token-srv"
+          }
+        ],
+        "MetricName": "SuccessPercent",
+        "Namespace": "CloudWatchSynthetics",
+        "Period": 300,
+        "Statistic": "Average",
+        "Threshold": 85,
+        "TreatMissingData": "ignore"
+      },
+      "Metadata": {
+        "aws:cdk:path": "ses-cloudwatch-synthetics/SES-Sandbox/Cloudwatch-Synthetics/sandbox-token-srv-Alarm/Resource"
+      }
+    },
+    "CDKMetadata": {
+      "Type": "AWS::CDK::Metadata",
+      "Properties": {
+        "Analytics": "v2:deflate64:H4sIAAAAAAAAE1WOwU4DMQxEv6V316X0Qm/QPfRaLfxA5Bpt2N24ih1VUZR/Z8OCgNM8j8cj7/H4hA+bZ3fXLV3HXSGJjOXVHI3QSVCLiQx6VkmRGLr38MMV2lHxbsbSy7Tuml5k8pTbuFIFPWA5JRrZmvtNq/yG/84VmB6XN5hS9JbPUdKtZf4ZS29QfJObp5NTBs3BBjZPiku0c8HFDDRJut6d0YDlZXJxbjVfUGuFS7ZBwu6AR9xvPtT7bUzB/MzYr/oJaguLjyABAAA="
+      },
+      "Metadata": {
+        "aws:cdk:path": "ses-cloudwatch-synthetics/SES-Sandbox/Cloudwatch-Synthetics/CDKMetadata/Default"
+      }
+    }
+  },
+  "Parameters": {
+    "BootstrapVersion": {
+      "Type": "AWS::SSM::Parameter::Value<String>",
+      "Default": "/cdk-bootstrap/hnb659fds/version",
+      "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store."
+    }
+  },
+  "Rules": {
+    "CheckBootstrapVersion": {
+      "Assertions": [
+        {
+          "Assert": {
+            "Fn::Not": [
+              {
+                "Fn::Contains": [
+                  [
+                    "1",
+                    "2",
+                    "3"
+                  ],
+                  {
+                    "Ref": "BootstrapVersion"
+                  }
+                ]
+              }
+            ]
+          },
+          "AssertDescription": "CDK bootstrap stack version 4 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI."
+        }
+      ]
+    }
+  }
+}

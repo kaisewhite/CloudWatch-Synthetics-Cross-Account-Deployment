@@ -1,0 +1,435 @@
+{
+  "version": "9.0.0",
+  "artifacts": {
+    "sescloudwatchsyntheticsSESDevCloudwatchSynthetics7F40E559.assets": {
+      "type": "cdk:asset-manifest",
+      "properties": {
+        "file": "sescloudwatchsyntheticsSESDevCloudwatchSynthetics7F40E559.assets.json",
+        "requiresBootstrapStackVersion": 4,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+      }
+    },
+    "sescloudwatchsyntheticsSESDevCloudwatchSynthetics7F40E559": {
+      "type": "aws:cloudformation:stack",
+      "environment": "aws://************/us-east-1",
+      "properties": {
+        "templateFile": "sescloudwatchsyntheticsSESDevCloudwatchSynthetics7F40E559.template.json",
+        "assumeRoleArn": "arn:${AWS::Partition}:iam::************:role/cdk-hnb659fds-deploy-role-************-us-east-1",
+        "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::************:role/cdk-hnb659fds-cfn-exec-role-************-us-east-1",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-************-us-east-1/90b6ec8e3076073ad51209fefc6db828eef4dd5a6fe72571e49718ab65eb198c.json",
+        "requiresBootstrapStackVersion": 4,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
+        "additionalDependencies": [
+          "sescloudwatchsyntheticsSESDevCloudwatchSynthetics7F40E559.assets"
+        ],
+        "stackName": "SES-Dev-Cloudwatch-Synthetics"
+      },
+      "dependencies": [
+        "sescloudwatchsyntheticsSESDevCloudwatchSynthetics7F40E559.assets"
+      ],
+      "metadata": {
+        "/ses-cloudwatch-synthetics/SES-Dev/Cloudwatch-Synthetics/CloudWatchSynthetics-role/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CloudWatchSyntheticsrole2174489A",
+            "trace": [
+              "new Role (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/jsii-kernel-kJHuKG/node_modules/@aws-cdk/aws-iam/lib/role.js:72:22)",
+              "/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:8154:58",
+              "Kernel._wrapSandboxCode (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:8582:24)",
+              "Kernel._create (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:8154:34)",
+              "Kernel.create (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:7895:29)",
+              "KernelHost.processRequest (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:9479:36)",
+              "KernelHost.run (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:9442:22)",
+              "Immediate._onImmediate (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:9443:46)",
+              "processImmediate (internal/timers.js:439:21)"
+            ]
+          }
+        ],
+        "/ses-cloudwatch-synthetics/SES-Dev/Cloudwatch-Synthetics/CloudWatchSynthetics-role/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CloudWatchSyntheticsroleDefaultPolicy567E931F",
+            "trace": [
+              "new Policy (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/jsii-kernel-kJHuKG/node_modules/@aws-cdk/aws-iam/lib/policy.js:56:26)",
+              "Role.addToPrincipalPolicy (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/jsii-kernel-kJHuKG/node_modules/@aws-cdk/aws-iam/lib/role.js:205:34)",
+              "Role.addToPolicy (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/jsii-kernel-kJHuKG/node_modules/@aws-cdk/aws-iam/lib/role.js:217:21)",
+              "/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:7970:134",
+              "Kernel._wrapSandboxCode (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:8582:24)",
+              "/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:7970:107",
+              "Kernel._ensureSync (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:8563:28)",
+              "Kernel.invoke (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:7970:34)",
+              "KernelHost.processRequest (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:9479:36)",
+              "KernelHost.run (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:9442:22)",
+              "Immediate._onImmediate (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:9443:46)",
+              "processImmediate (internal/timers.js:439:21)"
+            ]
+          }
+        ],
+        "/ses-cloudwatch-synthetics/SES-Dev/Cloudwatch-Synthetics/dev-cw-syn-results-************-us-east-1/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "devcwsynresults************useast1B52875DF",
+            "trace": [
+              "new Bucket (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/jsii-kernel-kJHuKG/node_modules/@aws-cdk/aws-s3/lib/bucket.js:521:26)",
+              "/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:8154:58",
+              "Kernel._wrapSandboxCode (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:8582:24)",
+              "Kernel._create (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:8154:34)",
+              "Kernel.create (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:7895:29)",
+              "KernelHost.processRequest (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:9479:36)",
+              "KernelHost.run (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:9442:22)",
+              "Immediate._onImmediate (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:9443:46)",
+              "processImmediate (internal/timers.js:439:21)"
+            ]
+          }
+        ],
+        "/ses-cloudwatch-synthetics/SES-Dev/Cloudwatch-Synthetics/dev-cw-syn-results-************-us-east-1/Policy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "devcwsynresults************useast1Policy7FD4B744",
+            "trace": [
+              "new BucketPolicy (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/jsii-kernel-kJHuKG/node_modules/@aws-cdk/aws-s3/lib/bucket-policy.js:32:25)",
+              "Bucket.addToResourcePolicy (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/jsii-kernel-kJHuKG/node_modules/@aws-cdk/aws-s3/lib/bucket.js:134:27)",
+              "/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:7970:134",
+              "Kernel._wrapSandboxCode (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:8582:24)",
+              "/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:7970:107",
+              "Kernel._ensureSync (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:8563:28)",
+              "Kernel.invoke (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:7970:34)",
+              "KernelHost.processRequest (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:9479:36)",
+              "KernelHost.run (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:9442:22)",
+              "Immediate._onImmediate (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:9443:46)",
+              "processImmediate (internal/timers.js:439:21)"
+            ]
+          }
+        ],
+        "/ses-cloudwatch-synthetics/SES-Dev/Cloudwatch-Synthetics/CloudWatchSyntheticsSG/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CloudWatchSyntheticsSG557C9016",
+            "trace": [
+              "new SecurityGroup (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/jsii-kernel-kJHuKG/node_modules/@aws-cdk/aws-ec2/lib/security-group.js:213:30)",
+              "/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:8154:58",
+              "Kernel._wrapSandboxCode (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:8582:24)",
+              "Kernel._create (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:8154:34)",
+              "Kernel.create (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:7895:29)",
+              "KernelHost.processRequest (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:9479:36)",
+              "KernelHost.run (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:9442:22)",
+              "Immediate._onImmediate (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:9443:46)",
+              "processImmediate (internal/timers.js:439:21)"
+            ]
+          }
+        ],
+        "/ses-cloudwatch-synthetics/SES-Dev/Cloudwatch-Synthetics/dev-cnt-srv-live": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "devcntsrvlive",
+            "trace": [
+              "/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:8154:58",
+              "Kernel._wrapSandboxCode (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:8582:24)",
+              "Kernel._create (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:8154:34)",
+              "Kernel.create (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:7895:29)",
+              "KernelHost.processRequest (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:9479:36)",
+              "KernelHost.run (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:9442:22)",
+              "Immediate._onImmediate (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:9443:46)",
+              "processImmediate (internal/timers.js:439:21)"
+            ]
+          }
+        ],
+        "/ses-cloudwatch-synthetics/SES-Dev/Cloudwatch-Synthetics/dev-cnt-srv-live-Alarm/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "devcntsrvliveAlarm6DA0E993",
+            "trace": [
+              "new Alarm (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/jsii-kernel-kJHuKG/node_modules/@aws-cdk/aws-cloudwatch/lib/alarm.js:74:23)",
+              "/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:8154:58",
+              "Kernel._wrapSandboxCode (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:8582:24)",
+              "Kernel._create (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:8154:34)",
+              "Kernel.create (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:7895:29)",
+              "KernelHost.processRequest (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:9479:36)",
+              "KernelHost.run (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:9442:22)",
+              "Immediate._onImmediate (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:9443:46)",
+              "processImmediate (internal/timers.js:439:21)"
+            ]
+          }
+        ],
+        "/ses-cloudwatch-synthetics/SES-Dev/Cloudwatch-Synthetics/dev-cnt-srv-rdy": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "devcntsrvrdy",
+            "trace": [
+              "/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:8154:58",
+              "Kernel._wrapSandboxCode (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:8582:24)",
+              "Kernel._create (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:8154:34)",
+              "Kernel.create (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:7895:29)",
+              "KernelHost.processRequest (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:9479:36)",
+              "KernelHost.run (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:9442:22)",
+              "Immediate._onImmediate (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:9443:46)",
+              "processImmediate (internal/timers.js:439:21)"
+            ]
+          }
+        ],
+        "/ses-cloudwatch-synthetics/SES-Dev/Cloudwatch-Synthetics/dev-cnt-srv-rdy-Alarm/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "devcntsrvrdyAlarmC203B137",
+            "trace": [
+              "new Alarm (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/jsii-kernel-kJHuKG/node_modules/@aws-cdk/aws-cloudwatch/lib/alarm.js:74:23)",
+              "/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:8154:58",
+              "Kernel._wrapSandboxCode (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:8582:24)",
+              "Kernel._create (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:8154:34)",
+              "Kernel.create (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:7895:29)",
+              "KernelHost.processRequest (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:9479:36)",
+              "KernelHost.run (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:9442:22)",
+              "Immediate._onImmediate (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:9443:46)",
+              "processImmediate (internal/timers.js:439:21)"
+            ]
+          }
+        ],
+        "/ses-cloudwatch-synthetics/SES-Dev/Cloudwatch-Synthetics/dev-cnt-srv-sum": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "devcntsrvsum",
+            "trace": [
+              "/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:8154:58",
+              "Kernel._wrapSandboxCode (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:8582:24)",
+              "Kernel._create (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:8154:34)",
+              "Kernel.create (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:7895:29)",
+              "KernelHost.processRequest (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:9479:36)",
+              "KernelHost.run (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:9442:22)",
+              "Immediate._onImmediate (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:9443:46)",
+              "processImmediate (internal/timers.js:439:21)"
+            ]
+          }
+        ],
+        "/ses-cloudwatch-synthetics/SES-Dev/Cloudwatch-Synthetics/dev-cnt-srv-sum-Alarm/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "devcntsrvsumAlarmCCF53A14",
+            "trace": [
+              "new Alarm (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/jsii-kernel-kJHuKG/node_modules/@aws-cdk/aws-cloudwatch/lib/alarm.js:74:23)",
+              "/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:8154:58",
+              "Kernel._wrapSandboxCode (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:8582:24)",
+              "Kernel._create (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:8154:34)",
+              "Kernel.create (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:7895:29)",
+              "KernelHost.processRequest (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:9479:36)",
+              "KernelHost.run (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:9442:22)",
+              "Immediate._onImmediate (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:9443:46)",
+              "processImmediate (internal/timers.js:439:21)"
+            ]
+          }
+        ],
+        "/ses-cloudwatch-synthetics/SES-Dev/Cloudwatch-Synthetics/dev-dwld-srv": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "devdwldsrv",
+            "trace": [
+              "/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:8154:58",
+              "Kernel._wrapSandboxCode (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:8582:24)",
+              "Kernel._create (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:8154:34)",
+              "Kernel.create (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:7895:29)",
+              "KernelHost.processRequest (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:9479:36)",
+              "KernelHost.run (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:9442:22)",
+              "Immediate._onImmediate (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:9443:46)",
+              "processImmediate (internal/timers.js:439:21)"
+            ]
+          }
+        ],
+        "/ses-cloudwatch-synthetics/SES-Dev/Cloudwatch-Synthetics/dev-dwld-srv-Alarm/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "devdwldsrvAlarm88EA3FD8",
+            "trace": [
+              "new Alarm (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/jsii-kernel-kJHuKG/node_modules/@aws-cdk/aws-cloudwatch/lib/alarm.js:74:23)",
+              "/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:8154:58",
+              "Kernel._wrapSandboxCode (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:8582:24)",
+              "Kernel._create (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:8154:34)",
+              "Kernel.create (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:7895:29)",
+              "KernelHost.processRequest (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:9479:36)",
+              "KernelHost.run (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:9442:22)",
+              "Immediate._onImmediate (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:9443:46)",
+              "processImmediate (internal/timers.js:439:21)"
+            ]
+          }
+        ],
+        "/ses-cloudwatch-synthetics/SES-Dev/Cloudwatch-Synthetics/dev-pdf-srv": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "devpdfsrv",
+            "trace": [
+              "/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:8154:58",
+              "Kernel._wrapSandboxCode (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:8582:24)",
+              "Kernel._create (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:8154:34)",
+              "Kernel.create (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:7895:29)",
+              "KernelHost.processRequest (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:9479:36)",
+              "KernelHost.run (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:9442:22)",
+              "Immediate._onImmediate (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:9443:46)",
+              "processImmediate (internal/timers.js:439:21)"
+            ]
+          }
+        ],
+        "/ses-cloudwatch-synthetics/SES-Dev/Cloudwatch-Synthetics/dev-pdf-srv-Alarm/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "devpdfsrvAlarm76494386",
+            "trace": [
+              "new Alarm (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/jsii-kernel-kJHuKG/node_modules/@aws-cdk/aws-cloudwatch/lib/alarm.js:74:23)",
+              "/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:8154:58",
+              "Kernel._wrapSandboxCode (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:8582:24)",
+              "Kernel._create (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:8154:34)",
+              "Kernel.create (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:7895:29)",
+              "KernelHost.processRequest (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:9479:36)",
+              "KernelHost.run (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:9442:22)",
+              "Immediate._onImmediate (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:9443:46)",
+              "processImmediate (internal/timers.js:439:21)"
+            ]
+          }
+        ],
+        "/ses-cloudwatch-synthetics/SES-Dev/Cloudwatch-Synthetics/dev-share-srv": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "devsharesrv",
+            "trace": [
+              "/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:8154:58",
+              "Kernel._wrapSandboxCode (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:8582:24)",
+              "Kernel._create (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:8154:34)",
+              "Kernel.create (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:7895:29)",
+              "KernelHost.processRequest (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:9479:36)",
+              "KernelHost.run (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:9442:22)",
+              "Immediate._onImmediate (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:9443:46)",
+              "processImmediate (internal/timers.js:439:21)"
+            ]
+          }
+        ],
+        "/ses-cloudwatch-synthetics/SES-Dev/Cloudwatch-Synthetics/dev-share-srv-Alarm/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "devsharesrvAlarm23D3C7C8",
+            "trace": [
+              "new Alarm (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/jsii-kernel-kJHuKG/node_modules/@aws-cdk/aws-cloudwatch/lib/alarm.js:74:23)",
+              "/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:8154:58",
+              "Kernel._wrapSandboxCode (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:8582:24)",
+              "Kernel._create (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:8154:34)",
+              "Kernel.create (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:7895:29)",
+              "KernelHost.processRequest (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:9479:36)",
+              "KernelHost.run (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:9442:22)",
+              "Immediate._onImmediate (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:9443:46)",
+              "processImmediate (internal/timers.js:439:21)"
+            ]
+          }
+        ],
+        "/ses-cloudwatch-synthetics/SES-Dev/Cloudwatch-Synthetics/dev-token-srv": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "devtokensrv",
+            "trace": [
+              "/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:8154:58",
+              "Kernel._wrapSandboxCode (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:8582:24)",
+              "Kernel._create (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:8154:34)",
+              "Kernel.create (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:7895:29)",
+              "KernelHost.processRequest (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:9479:36)",
+              "KernelHost.run (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:9442:22)",
+              "Immediate._onImmediate (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:9443:46)",
+              "processImmediate (internal/timers.js:439:21)"
+            ]
+          }
+        ],
+        "/ses-cloudwatch-synthetics/SES-Dev/Cloudwatch-Synthetics/dev-token-srv-Alarm/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "devtokensrvAlarm390FE45F",
+            "trace": [
+              "new Alarm (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/jsii-kernel-kJHuKG/node_modules/@aws-cdk/aws-cloudwatch/lib/alarm.js:74:23)",
+              "/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:8154:58",
+              "Kernel._wrapSandboxCode (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:8582:24)",
+              "Kernel._create (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:8154:34)",
+              "Kernel.create (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:7895:29)",
+              "KernelHost.processRequest (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:9479:36)",
+              "KernelHost.run (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:9442:22)",
+              "Immediate._onImmediate (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:9443:46)",
+              "processImmediate (internal/timers.js:439:21)"
+            ]
+          }
+        ],
+        "/ses-cloudwatch-synthetics/SES-Dev/Cloudwatch-Synthetics/CDKMetadata/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CDKMetadata",
+            "trace": [
+              "new MetadataResource (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/jsii-kernel-kJHuKG/node_modules/@aws-cdk/core/lib/private/metadata-resource.js:22:30)",
+              "/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/jsii-kernel-kJHuKG/node_modules/@aws-cdk/core/lib/private/synthesis.js:128:9",
+              "visit (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/jsii-kernel-kJHuKG/node_modules/@aws-cdk/core/lib/private/synthesis.js:184:9)",
+              "visit (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/jsii-kernel-kJHuKG/node_modules/@aws-cdk/core/lib/private/synthesis.js:181:9)",
+              "injectMetadataResources (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/jsii-kernel-kJHuKG/node_modules/@aws-cdk/core/lib/private/synthesis.js:117:5)",
+              "Object.synthesize (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/jsii-kernel-kJHuKG/node_modules/@aws-cdk/core/lib/private/synthesis.js:17:5)",
+              "Stage.synth (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/jsii-kernel-kJHuKG/node_modules/@aws-cdk/core/lib/stage.js:100:41)",
+              "CdkStage.addApplication (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/jsii-kernel-kJHuKG/node_modules/@aws-cdk/pipelines/lib/stage.js:53:30)",
+              "CdkPipeline.addApplicationStage (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/jsii-kernel-kJHuKG/node_modules/@aws-cdk/pipelines/lib/pipeline.js:138:15)",
+              "/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:7970:134",
+              "Kernel._wrapSandboxCode (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:8582:24)",
+              "/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:7970:107",
+              "Kernel._ensureSync (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:8563:28)",
+              "Kernel.invoke (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:7970:34)",
+              "KernelHost.processRequest (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:9479:36)",
+              "KernelHost.run (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:9442:22)",
+              "Immediate._onImmediate (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:9443:46)",
+              "processImmediate (internal/timers.js:439:21)"
+            ]
+          }
+        ],
+        "/ses-cloudwatch-synthetics/SES-Dev/Cloudwatch-Synthetics/BootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BootstrapVersion",
+            "trace": [
+              "addBootstrapVersionRule (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/jsii-kernel-kJHuKG/node_modules/@aws-cdk/core/lib/stack-synthesizers/default-synthesizer.js:412:19)",
+              "DefaultStackSynthesizer.synthesize (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/jsii-kernel-kJHuKG/node_modules/@aws-cdk/core/lib/stack-synthesizers/default-synthesizer.js:194:13)",
+              "/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/jsii-kernel-kJHuKG/node_modules/@aws-cdk/core/lib/private/synthesis.js:143:35",
+              "visit (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/jsii-kernel-kJHuKG/node_modules/@aws-cdk/core/lib/private/synthesis.js:184:9)",
+              "visit (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/jsii-kernel-kJHuKG/node_modules/@aws-cdk/core/lib/private/synthesis.js:181:9)",
+              "synthesizeTree (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/jsii-kernel-kJHuKG/node_modules/@aws-cdk/core/lib/private/synthesis.js:137:5)",
+              "Object.synthesize (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/jsii-kernel-kJHuKG/node_modules/@aws-cdk/core/lib/private/synthesis.js:33:5)",
+              "Stage.synth (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/jsii-kernel-kJHuKG/node_modules/@aws-cdk/core/lib/stage.js:100:41)",
+              "CdkStage.addApplication (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/jsii-kernel-kJHuKG/node_modules/@aws-cdk/pipelines/lib/stage.js:53:30)",
+              "CdkPipeline.addApplicationStage (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/jsii-kernel-kJHuKG/node_modules/@aws-cdk/pipelines/lib/pipeline.js:138:15)",
+              "/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:7970:134",
+              "Kernel._wrapSandboxCode (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:8582:24)",
+              "/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:7970:107",
+              "Kernel._ensureSync (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:8563:28)",
+              "Kernel.invoke (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:7970:34)",
+              "KernelHost.processRequest (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:9479:36)",
+              "KernelHost.run (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:9442:22)",
+              "Immediate._onImmediate (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:9443:46)",
+              "processImmediate (internal/timers.js:439:21)"
+            ]
+          }
+        ],
+        "/ses-cloudwatch-synthetics/SES-Dev/Cloudwatch-Synthetics/CheckBootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CheckBootstrapVersion",
+            "trace": [
+              "addBootstrapVersionRule (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/jsii-kernel-kJHuKG/node_modules/@aws-cdk/core/lib/stack-synthesizers/default-synthesizer.js:420:5)",
+              "DefaultStackSynthesizer.synthesize (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/jsii-kernel-kJHuKG/node_modules/@aws-cdk/core/lib/stack-synthesizers/default-synthesizer.js:194:13)",
+              "/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/jsii-kernel-kJHuKG/node_modules/@aws-cdk/core/lib/private/synthesis.js:143:35",
+              "visit (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/jsii-kernel-kJHuKG/node_modules/@aws-cdk/core/lib/private/synthesis.js:184:9)",
+              "visit (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/jsii-kernel-kJHuKG/node_modules/@aws-cdk/core/lib/private/synthesis.js:181:9)",
+              "synthesizeTree (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/jsii-kernel-kJHuKG/node_modules/@aws-cdk/core/lib/private/synthesis.js:137:5)",
+              "Object.synthesize (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/jsii-kernel-kJHuKG/node_modules/@aws-cdk/core/lib/private/synthesis.js:33:5)",
+              "Stage.synth (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/jsii-kernel-kJHuKG/node_modules/@aws-cdk/core/lib/stage.js:100:41)",
+              "CdkStage.addApplication (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/jsii-kernel-kJHuKG/node_modules/@aws-cdk/pipelines/lib/stage.js:53:30)",
+              "CdkPipeline.addApplicationStage (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/jsii-kernel-kJHuKG/node_modules/@aws-cdk/pipelines/lib/pipeline.js:138:15)",
+              "/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:7970:134",
+              "Kernel._wrapSandboxCode (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:8582:24)",
+              "/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:7970:107",
+              "Kernel._ensureSync (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:8563:28)",
+              "Kernel.invoke (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:7970:34)",
+              "KernelHost.processRequest (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:9479:36)",
+              "KernelHost.run (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:9442:22)",
+              "Immediate._onImmediate (/private/var/folders/t2/zdydrj2n6lg1dyb2rxdvd8d80000gn/T/tmp1y2s_3si/lib/program.js:9443:46)",
+              "processImmediate (internal/timers.js:439:21)"
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

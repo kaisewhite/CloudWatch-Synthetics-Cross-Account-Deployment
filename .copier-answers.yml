@@ -1,0 +1,19 @@
+_commit: 0.1.2
+_src_path: csbs-cdk-lambda-template
+author_email: kwhite@csbs.org
+author_fullname: Kaise White
+author_username: kwhite
+create_layer: false
+management_account: "************"
+project_description: CloudWatch Synthetic Canaries
+project_name: csbs-cdk-cw-syn
+project_version: 0.1.0
+python_package_command_line_name: csbs-cdk-cw-syn
+python_package_distribution_name: csbs-cdk-cw-syn
+python_package_import_name: csbs_cdk_cw_syn
+repository_name: csbs-cdk-cw-syn
+repository_namespace: csbs
+repository_provider: CodeCommit
+sandbox_account: "************"
+target_system: csbs
+use_role_plugin: true

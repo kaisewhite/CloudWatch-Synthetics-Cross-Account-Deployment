@@ -1,0 +1,134 @@
+[tool.poetry]
+name = "csbs-cdk-cw-syn"
+version = "0.1.0"
+description = "CloudWatch Synthetic Canaries"
+authors = ["Kaise White <kwhite@csbs.org>"]
+maintainers = []
+include = [
+    "CHANGELOG.md",
+    "SECURITY.md",
+]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+aws-lambda-powertools = "^1.10.5"
+"aws-cdk.aws-codecommit" = "^1.98.0"
+"aws-cdk.aws-codepipeline-actions" = "^1.101.0"
+"aws-cdk.pipelines" = "^1.101.0"
+"aws-cdk.aws-synthetics" = "^1.103.0"
+
+[tool.poetry.dev-dependencies]
+black = "^20.8b1"
+isort = {extras = ["pyproject"], version = "^5.7.0"}
+flake8 = "^3.8.4"
+mypy = "^0.812"
+pydocstyle = "^5.1.1"
+pycodestyle = "^2.6.0"
+safety = "^1.10.3"
+bandit = "^1.7.0"
+pylint = "^2.7.1"
+checkov = "^1.0.816"
+pytest = "^6.2.2"
+pytest-sugar = "^0.9.4"
+pytest-black = "^0.3.12"
+pytest-mypy = "^0.8.0"
+debugpy = "^1.2.1"
+"aws-cdk.core" = "^1.96.0"
+"aws-cdk.aws-lambda" = "^1.96.0"
+"aws-cdk.aws-lambda-python" = "^1.96.0"
+"aws-cdk.aws-codepipeline" = "^1.96.0"
+cdk-watchful = "^0.5.93"
+autopep8 = "^1.5.7"
+
+[tool.isort]
+profile = "black"
+line_length = 88
+multi_line_output = 3
+include_trailing_comma = true
+force_grid_wrap = 0
+use_parentheses = true
+ensure_newline_before_comments = true
+known_future_library = "__future__"
+known_third_party = [
+    "boto3",
+    "botocore",
+    "pytest",
+    "requests",
+    "urllib3",
+    "six",
+    "yaml",
+    "aws_lambda_powertools",
+    "aws_cdk",
+    "cdk_constructs",
+    "cdk_watchful",
+]
+known_first_party = [
+    "tests",
+    "assets",
+    "unittests",
+]
+default_section = "THIRDPARTY"
+indent = "    "
+sections = [
+    "FUTURE",
+    "STDLIB",
+    "THIRDPARTY",
+    "FIRSTPARTY",
+    "LOCALFOLDER",
+]
+skip = ["cdk.out", ".env", "node_modules", "venv", ".venv"]
+
+[tool.pytest]
+norecursedirs = [
+    "cdk.out",
+    "**/.mypy_cache",
+    "**/**/.mypy_cache",
+    "__pycache__",
+    "**/__pycache__",
+    ".mypy_cache",
+    ".pytest_cache",
+    ".git",
+    "venv",
+    "node_modules",
+    ".venv"
+]
+addopts = [
+    "-rf",
+    "--cov",
+]
+
+[tool.pylint]
+line_length = "120"
+
+[tool.pylint.messages_control]
+disable = "C0330, C0326"
+
+[tool.pylint.format]
+max-line-length = "120"
+
+[tool.black]
+line-length = 120
+target-version = ["py38"]
+exclude = '''
+/(
+    \.eggs
+  | \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | _build
+  | buck-out
+  | build
+  | dist
+  | cdk.out
+  | .env
+  | node_modules
+  | venv
+)/
+'''
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

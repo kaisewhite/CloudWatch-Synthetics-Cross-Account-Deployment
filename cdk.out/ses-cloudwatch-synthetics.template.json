@@ -1,0 +1,1376 @@
+{
+  "Resources": {
+    "csbsRepositorysescloudwatchsyntheticscsbsBasePipelineB06E8477EventRuleBC18C678": {
+      "Type": "AWS::Events::Rule",
+      "Properties": {
+        "EventPattern": {
+          "source": ["aws.codecommit"],
+          "resources": ["arn:aws:codecommit:us-east-1:************:ses-cloudwatch-synthetics"],
+          "detail-type": ["CodeCommit Repository State Change"],
+          "detail": {
+            "event": ["referenceCreated", "referenceUpdated"],
+            "referenceName": ["master"]
+          }
+        },
+        "State": "ENABLED",
+        "Targets": [
+          {
+            "Arn": {
+              "Fn::Join": [
+                "",
+                [
+                  "arn:",
+                  {
+                    "Ref": "AWS::Partition"
+                  },
+                  ":codepipeline:us-east-1:************:",
+                  {
+                    "Ref": "csbsBasePipelineD6F031B6"
+                  }
+                ]
+              ]
+            },
+            "Id": "Target0",
+            "RoleArn": {
+              "Fn::GetAtt": ["csbsBasePipelineEventsRole1ED131DF", "Arn"]
+            }
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "ses-cloudwatch-synthetics/csbsRepository/sescloudwatchsyntheticscsbsBasePipelineB06E8477EventRule/Resource"
+      }
+    },
+    "csbsPipelineRole2883C5BD": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "codepipeline.amazonaws.com"
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "RoleName": "ses-cloudwatch-synthetics-role"
+      },
+      "Metadata": {
+        "aws:cdk:path": "ses-cloudwatch-synthetics/csbsPipelineRole/Resource"
+      }
+    },
+    "csbsPipelineRoleDefaultPolicyA9447AD2": {
+      "Type": "AWS::IAM::Policy",
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": "ecr:GetAuthorizationToken",
+              "Effect": "Allow",
+              "Resource": "*"
+            },
+            {
+              "Action": ["s3:GetObject*", "s3:GetBucket*", "s3:List*", "s3:DeleteObject*", "s3:PutObject", "s3:Abort*"],
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::GetAtt": ["csbsBasePipelineArtifactsBucket585E8292", "Arn"]
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      {
+                        "Fn::GetAtt": ["csbsBasePipelineArtifactsBucket585E8292", "Arn"]
+                      },
+                      "/*"
+                    ]
+                  ]
+                }
+              ]
+            },
+            {
+              "Action": ["kms:Decrypt", "kms:DescribeKey", "kms:Encrypt", "kms:ReEncrypt*", "kms:GenerateDataKey*"],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": ["csbsBasePipelineArtifactsBucketEncryptionKey7ABA67C1", "Arn"]
+              }
+            },
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": ["csbsPipelineRole2883C5BD", "Arn"]
+              }
+            },
+            {
+              "Action": [
+                "codecommit:GetBranch",
+                "codecommit:GetCommit",
+                "codecommit:UploadArchive",
+                "codecommit:GetUploadArchiveStatus",
+                "codecommit:CancelUploadArchive"
+              ],
+              "Effect": "Allow",
+              "Resource": "arn:aws:codecommit:us-east-1:************:ses-cloudwatch-synthetics"
+            },
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": ["csbsBasePipelineBuildSynthCodePipelineActionRole94272B12", "Arn"]
+              }
+            },
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": ["csbsBasePipelineUpdatePipelineSelfMutateCodePipelineActionRoleFCF31BBA", "Arn"]
+              }
+            },
+            {
+              "Action": "codecommit:GitPull",
+              "Effect": "Allow",
+              "Resource": "arn:aws:codecommit:us-east-1:************:ses-cloudwatch-synthetics"
+            },
+            {
+              "Action": ["codecommit:EvaluatePullRequestApprovalRules", "codecommit:Get*", "codecommit:Describe*"],
+              "Effect": "Allow",
+              "Resource": "arn:aws:codecommit:us-east-1:************:ses-cloudwatch-synthetics"
+            },
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition"
+                    },
+                    ":iam::************:role/cdk-hnb659fds-deploy-role-************-us-east-1"
+                  ]
+                ]
+              }
+            },
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition"
+                    },
+                    ":iam::************:role/cdk-hnb659fds-deploy-role-************-us-east-1"
+                  ]
+                ]
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "PolicyName": "csbsPipelineRoleDefaultPolicyA9447AD2",
+        "Roles": [
+          {
+            "Ref": "csbsPipelineRole2883C5BD"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "ses-cloudwatch-synthetics/csbsPipelineRole/DefaultPolicy/Resource"
+      }
+    },
+    "csbsBasePipelineArtifactsBucketEncryptionKey7ABA67C1": {
+      "Type": "AWS::KMS::Key",
+      "Properties": {
+        "KeyPolicy": {
+          "Statement": [
+            {
+              "Action": "kms:*",
+              "Effect": "Allow",
+              "Principal": {
+                "AWS": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":iam::************:root"
+                    ]
+                  ]
+                }
+              },
+              "Resource": "*"
+            },
+            {
+              "Action": ["kms:Decrypt", "kms:DescribeKey"],
+              "Effect": "Allow",
+              "Principal": {
+                "AWS": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":iam::************:role/cdk-hnb659fds-deploy-role-************-us-east-1"
+                    ]
+                  ]
+                }
+              },
+              "Resource": "*"
+            },
+            {
+              "Action": ["kms:Decrypt", "kms:DescribeKey"],
+              "Effect": "Allow",
+              "Principal": {
+                "AWS": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":iam::************:role/cdk-hnb659fds-deploy-role-************-us-east-1"
+                    ]
+                  ]
+                }
+              },
+              "Resource": "*"
+            }
+          ],
+          "Version": "2012-10-17"
+        }
+      },
+      "UpdateReplacePolicy": "Delete",
+      "DeletionPolicy": "Delete",
+      "Metadata": {
+        "aws:cdk:path": "ses-cloudwatch-synthetics/csbsBasePipeline/ArtifactsBucketEncryptionKey/Resource"
+      }
+    },
+    "csbsBasePipelineArtifactsBucketEncryptionKeyAlias68BE29E3": {
+      "Type": "AWS::KMS::Alias",
+      "Properties": {
+        "AliasName": "alias/codepipeline-sescloudwatchsyntheticscsbsbasepipelineb06e8477",
+        "TargetKeyId": {
+          "Fn::GetAtt": ["csbsBasePipelineArtifactsBucketEncryptionKey7ABA67C1", "Arn"]
+        }
+      },
+      "UpdateReplacePolicy": "Delete",
+      "DeletionPolicy": "Delete",
+      "Metadata": {
+        "aws:cdk:path": "ses-cloudwatch-synthetics/csbsBasePipeline/ArtifactsBucketEncryptionKeyAlias/Resource"
+      }
+    },
+    "csbsBasePipelineArtifactsBucket585E8292": {
+      "Type": "AWS::S3::Bucket",
+      "Properties": {
+        "BucketEncryption": {
+          "ServerSideEncryptionConfiguration": [
+            {
+              "ServerSideEncryptionByDefault": {
+                "KMSMasterKeyID": {
+                  "Fn::GetAtt": ["csbsBasePipelineArtifactsBucketEncryptionKey7ABA67C1", "Arn"]
+                },
+                "SSEAlgorithm": "aws:kms"
+              }
+            }
+          ]
+        },
+        "PublicAccessBlockConfiguration": {
+          "BlockPublicAcls": true,
+          "BlockPublicPolicy": true,
+          "IgnorePublicAcls": true,
+          "RestrictPublicBuckets": true
+        }
+      },
+      "UpdateReplacePolicy": "Retain",
+      "DeletionPolicy": "Retain",
+      "Metadata": {
+        "aws:cdk:path": "ses-cloudwatch-synthetics/csbsBasePipeline/ArtifactsBucket/Resource"
+      }
+    },
+    "csbsBasePipelineArtifactsBucketPolicy84F2155A": {
+      "Type": "AWS::S3::BucketPolicy",
+      "Properties": {
+        "Bucket": {
+          "Ref": "csbsBasePipelineArtifactsBucket585E8292"
+        },
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": ["s3:GetObject*", "s3:GetBucket*", "s3:List*"],
+              "Effect": "Allow",
+              "Principal": {
+                "AWS": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":iam::************:role/cdk-hnb659fds-deploy-role-************-us-east-1"
+                    ]
+                  ]
+                }
+              },
+              "Resource": [
+                {
+                  "Fn::GetAtt": ["csbsBasePipelineArtifactsBucket585E8292", "Arn"]
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      {
+                        "Fn::GetAtt": ["csbsBasePipelineArtifactsBucket585E8292", "Arn"]
+                      },
+                      "/*"
+                    ]
+                  ]
+                }
+              ]
+            },
+            {
+              "Action": ["s3:GetObject*", "s3:GetBucket*", "s3:List*"],
+              "Effect": "Allow",
+              "Principal": {
+                "AWS": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":iam::************:role/cdk-hnb659fds-deploy-role-************-us-east-1"
+                    ]
+                  ]
+                }
+              },
+              "Resource": [
+                {
+                  "Fn::GetAtt": ["csbsBasePipelineArtifactsBucket585E8292", "Arn"]
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      {
+                        "Fn::GetAtt": ["csbsBasePipelineArtifactsBucket585E8292", "Arn"]
+                      },
+                      "/*"
+                    ]
+                  ]
+                }
+              ]
+            }
+          ],
+          "Version": "2012-10-17"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "ses-cloudwatch-synthetics/csbsBasePipeline/ArtifactsBucket/Policy/Resource"
+      }
+    },
+    "csbsBasePipelineD6F031B6": {
+      "Type": "AWS::CodePipeline::Pipeline",
+      "Properties": {
+        "RoleArn": {
+          "Fn::GetAtt": ["csbsPipelineRole2883C5BD", "Arn"]
+        },
+        "Stages": [
+          {
+            "Actions": [
+              {
+                "ActionTypeId": {
+                  "Category": "Source",
+                  "Owner": "AWS",
+                  "Provider": "CodeCommit",
+                  "Version": "1"
+                },
+                "Configuration": {
+                  "RepositoryName": "ses-cloudwatch-synthetics",
+                  "BranchName": "master",
+                  "PollForSourceChanges": false
+                },
+                "Name": "Source",
+                "OutputArtifacts": [
+                  {
+                    "Name": "Artifact_Source_Source"
+                  }
+                ],
+                "RoleArn": {
+                  "Fn::GetAtt": ["csbsPipelineRole2883C5BD", "Arn"]
+                },
+                "RunOrder": 1
+              }
+            ],
+            "Name": "Source"
+          },
+          {
+            "Actions": [
+              {
+                "ActionTypeId": {
+                  "Category": "Build",
+                  "Owner": "AWS",
+                  "Provider": "CodeBuild",
+                  "Version": "1"
+                },
+                "Configuration": {
+                  "ProjectName": {
+                    "Ref": "csbsBasePipelineBuildSynthCdkBuildProject47934895"
+                  },
+                  "EnvironmentVariables": "[{\"name\":\"_PROJECT_CONFIG_HASH\",\"type\":\"PLAINTEXT\",\"value\":\"5dd0141e4aa4e7895bb7f5459e947a0b9dcb7dfd55aae7ad492ab4626bc57f33\"}]"
+                },
+                "InputArtifacts": [
+                  {
+                    "Name": "Artifact_Source_Source"
+                  }
+                ],
+                "Name": "Synth",
+                "OutputArtifacts": [
+                  {
+                    "Name": "Artifact_Build_Synth"
+                  }
+                ],
+                "RoleArn": {
+                  "Fn::GetAtt": ["csbsBasePipelineBuildSynthCodePipelineActionRole94272B12", "Arn"]
+                },
+                "RunOrder": 1
+              }
+            ],
+            "Name": "Build"
+          },
+          {
+            "Actions": [
+              {
+                "ActionTypeId": {
+                  "Category": "Build",
+                  "Owner": "AWS",
+                  "Provider": "CodeBuild",
+                  "Version": "1"
+                },
+                "Configuration": {
+                  "ProjectName": {
+                    "Ref": "csbsCdkPipelineUpdatePipelineSelfMutationE8151C15"
+                  }
+                },
+                "InputArtifacts": [
+                  {
+                    "Name": "Artifact_Build_Synth"
+                  }
+                ],
+                "Name": "SelfMutate",
+                "RoleArn": {
+                  "Fn::GetAtt": ["csbsBasePipelineUpdatePipelineSelfMutateCodePipelineActionRoleFCF31BBA", "Arn"]
+                },
+                "RunOrder": 1
+              }
+            ],
+            "Name": "UpdatePipeline"
+          },
+          {
+            "Actions": [
+              {
+                "ActionTypeId": {
+                  "Category": "Deploy",
+                  "Owner": "AWS",
+                  "Provider": "CloudFormation",
+                  "Version": "1"
+                },
+                "Configuration": {
+                  "StackName": "SES-Sandbox-Cloudwatch-Synthetics",
+                  "Capabilities": "CAPABILITY_NAMED_IAM,CAPABILITY_AUTO_EXPAND",
+                  "RoleArn": {
+                    "Fn::Join": [
+                      "",
+                      [
+                        "arn:",
+                        {
+                          "Ref": "AWS::Partition"
+                        },
+                        ":iam::************:role/cdk-hnb659fds-cfn-exec-role-************-us-east-1"
+                      ]
+                    ]
+                  },
+                  "ActionMode": "CHANGE_SET_REPLACE",
+                  "ChangeSetName": "PipelineChange",
+                  "TemplatePath": "Artifact_Build_Synth::assembly-ses-cloudwatch-synthetics-SES-Sandbox/sescloudwatchsyntheticsSESSandboxCloudwatchSyntheticsE3F8D8B6.template.json"
+                },
+                "InputArtifacts": [
+                  {
+                    "Name": "Artifact_Build_Synth"
+                  }
+                ],
+                "Name": "Cloudwatch-Synthetics.Prepare",
+                "RoleArn": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":iam::************:role/cdk-hnb659fds-deploy-role-************-us-east-1"
+                    ]
+                  ]
+                },
+                "RunOrder": 1
+              },
+              {
+                "ActionTypeId": {
+                  "Category": "Deploy",
+                  "Owner": "AWS",
+                  "Provider": "CloudFormation",
+                  "Version": "1"
+                },
+                "Configuration": {
+                  "StackName": "SES-Sandbox-Cloudwatch-Synthetics",
+                  "ActionMode": "CHANGE_SET_EXECUTE",
+                  "ChangeSetName": "PipelineChange"
+                },
+                "Name": "Cloudwatch-Synthetics.Deploy",
+                "RoleArn": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":iam::************:role/cdk-hnb659fds-deploy-role-************-us-east-1"
+                    ]
+                  ]
+                },
+                "RunOrder": 2
+              }
+            ],
+            "Name": "SES-Sandbox"
+          },
+          {
+            "Actions": [
+              {
+                "ActionTypeId": {
+                  "Category": "Deploy",
+                  "Owner": "AWS",
+                  "Provider": "CloudFormation",
+                  "Version": "1"
+                },
+                "Configuration": {
+                  "StackName": "SES-Dev-Cloudwatch-Synthetics",
+                  "Capabilities": "CAPABILITY_NAMED_IAM,CAPABILITY_AUTO_EXPAND",
+                  "RoleArn": {
+                    "Fn::Join": [
+                      "",
+                      [
+                        "arn:",
+                        {
+                          "Ref": "AWS::Partition"
+                        },
+                        ":iam::************:role/cdk-hnb659fds-cfn-exec-role-************-us-east-1"
+                      ]
+                    ]
+                  },
+                  "ActionMode": "CHANGE_SET_REPLACE",
+                  "ChangeSetName": "PipelineChange",
+                  "TemplatePath": "Artifact_Build_Synth::assembly-ses-cloudwatch-synthetics-SES-Dev/sescloudwatchsyntheticsSESDevCloudwatchSynthetics7F40E559.template.json"
+                },
+                "InputArtifacts": [
+                  {
+                    "Name": "Artifact_Build_Synth"
+                  }
+                ],
+                "Name": "Cloudwatch-Synthetics.Prepare",
+                "RoleArn": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":iam::************:role/cdk-hnb659fds-deploy-role-************-us-east-1"
+                    ]
+                  ]
+                },
+                "RunOrder": 1
+              },
+              {
+                "ActionTypeId": {
+                  "Category": "Deploy",
+                  "Owner": "AWS",
+                  "Provider": "CloudFormation",
+                  "Version": "1"
+                },
+                "Configuration": {
+                  "StackName": "SES-Dev-Cloudwatch-Synthetics",
+                  "ActionMode": "CHANGE_SET_EXECUTE",
+                  "ChangeSetName": "PipelineChange"
+                },
+                "Name": "Cloudwatch-Synthetics.Deploy",
+                "RoleArn": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":iam::************:role/cdk-hnb659fds-deploy-role-************-us-east-1"
+                    ]
+                  ]
+                },
+                "RunOrder": 2
+              }
+            ],
+            "Name": "SES-Dev"
+          },
+          {
+            "Actions": [
+              {
+                "ActionTypeId": {
+                  "Category": "Deploy",
+                  "Owner": "AWS",
+                  "Provider": "CloudFormation",
+                  "Version": "1"
+                },
+                "Configuration": {
+                  "StackName": "SES-Qa-Cloudwatch-Synthetics",
+                  "Capabilities": "CAPABILITY_NAMED_IAM,CAPABILITY_AUTO_EXPAND",
+                  "RoleArn": {
+                    "Fn::Join": [
+                      "",
+                      [
+                        "arn:",
+                        {
+                          "Ref": "AWS::Partition"
+                        },
+                        ":iam::************:role/cdk-hnb659fds-cfn-exec-role-************-us-east-1"
+                      ]
+                    ]
+                  },
+                  "ActionMode": "CHANGE_SET_REPLACE",
+                  "ChangeSetName": "PipelineChange",
+                  "TemplatePath": "Artifact_Build_Synth::assembly-ses-cloudwatch-synthetics-SES-Qa/sescloudwatchsyntheticsSESQaCloudwatchSynthetics670B7C8A.template.json"
+                },
+                "InputArtifacts": [
+                  {
+                    "Name": "Artifact_Build_Synth"
+                  }
+                ],
+                "Name": "Cloudwatch-Synthetics.Prepare",
+                "RoleArn": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":iam::************:role/cdk-hnb659fds-deploy-role-************-us-east-1"
+                    ]
+                  ]
+                },
+                "RunOrder": 1
+              },
+              {
+                "ActionTypeId": {
+                  "Category": "Deploy",
+                  "Owner": "AWS",
+                  "Provider": "CloudFormation",
+                  "Version": "1"
+                },
+                "Configuration": {
+                  "StackName": "SES-Qa-Cloudwatch-Synthetics",
+                  "ActionMode": "CHANGE_SET_EXECUTE",
+                  "ChangeSetName": "PipelineChange"
+                },
+                "Name": "Cloudwatch-Synthetics.Deploy",
+                "RoleArn": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":iam::************:role/cdk-hnb659fds-deploy-role-************-us-east-1"
+                    ]
+                  ]
+                },
+                "RunOrder": 2
+              }
+            ],
+            "Name": "SES-Qa"
+          },
+          {
+            "Actions": [
+              {
+                "ActionTypeId": {
+                  "Category": "Deploy",
+                  "Owner": "AWS",
+                  "Provider": "CloudFormation",
+                  "Version": "1"
+                },
+                "Configuration": {
+                  "StackName": "SES-Test-Cloudwatch-Synthetics",
+                  "Capabilities": "CAPABILITY_NAMED_IAM,CAPABILITY_AUTO_EXPAND",
+                  "RoleArn": {
+                    "Fn::Join": [
+                      "",
+                      [
+                        "arn:",
+                        {
+                          "Ref": "AWS::Partition"
+                        },
+                        ":iam::************:role/cdk-hnb659fds-cfn-exec-role-************-us-east-1"
+                      ]
+                    ]
+                  },
+                  "ActionMode": "CHANGE_SET_REPLACE",
+                  "ChangeSetName": "PipelineChange",
+                  "TemplatePath": "Artifact_Build_Synth::assembly-ses-cloudwatch-synthetics-SES-Test/sescloudwatchsyntheticsSESTestCloudwatchSyntheticsBED7C927.template.json"
+                },
+                "InputArtifacts": [
+                  {
+                    "Name": "Artifact_Build_Synth"
+                  }
+                ],
+                "Name": "Cloudwatch-Synthetics.Prepare",
+                "RoleArn": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":iam::************:role/cdk-hnb659fds-deploy-role-************-us-east-1"
+                    ]
+                  ]
+                },
+                "RunOrder": 1
+              },
+              {
+                "ActionTypeId": {
+                  "Category": "Deploy",
+                  "Owner": "AWS",
+                  "Provider": "CloudFormation",
+                  "Version": "1"
+                },
+                "Configuration": {
+                  "StackName": "SES-Test-Cloudwatch-Synthetics",
+                  "ActionMode": "CHANGE_SET_EXECUTE",
+                  "ChangeSetName": "PipelineChange"
+                },
+                "Name": "Cloudwatch-Synthetics.Deploy",
+                "RoleArn": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":iam::************:role/cdk-hnb659fds-deploy-role-************-us-east-1"
+                    ]
+                  ]
+                },
+                "RunOrder": 2
+              }
+            ],
+            "Name": "SES-Test"
+          }
+        ],
+        "ArtifactStore": {
+          "EncryptionKey": {
+            "Id": {
+              "Fn::GetAtt": ["csbsBasePipelineArtifactsBucketEncryptionKey7ABA67C1", "Arn"]
+            },
+            "Type": "KMS"
+          },
+          "Location": {
+            "Ref": "csbsBasePipelineArtifactsBucket585E8292"
+          },
+          "Type": "S3"
+        },
+        "Name": "ses-cloudwatch-synthetics",
+        "RestartExecutionOnUpdate": true
+      },
+      "DependsOn": ["csbsPipelineRoleDefaultPolicyA9447AD2", "csbsPipelineRole2883C5BD"],
+      "Metadata": {
+        "aws:cdk:path": "ses-cloudwatch-synthetics/csbsBasePipeline/Resource"
+      }
+    },
+    "csbsBasePipelineEventsRole1ED131DF": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "events.amazonaws.com"
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "ses-cloudwatch-synthetics/csbsBasePipeline/EventsRole/Resource"
+      }
+    },
+    "csbsBasePipelineEventsRoleDefaultPolicyCA5D842D": {
+      "Type": "AWS::IAM::Policy",
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": "codepipeline:StartPipelineExecution",
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition"
+                    },
+                    ":codepipeline:us-east-1:************:",
+                    {
+                      "Ref": "csbsBasePipelineD6F031B6"
+                    }
+                  ]
+                ]
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "PolicyName": "csbsBasePipelineEventsRoleDefaultPolicyCA5D842D",
+        "Roles": [
+          {
+            "Ref": "csbsBasePipelineEventsRole1ED131DF"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "ses-cloudwatch-synthetics/csbsBasePipeline/EventsRole/DefaultPolicy/Resource"
+      }
+    },
+    "csbsBasePipelineBuildSynthCodePipelineActionRole94272B12": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "AWS": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":iam::************:root"
+                    ]
+                  ]
+                }
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "ses-cloudwatch-synthetics/csbsBasePipeline/Build/Synth/CodePipelineActionRole/Resource"
+      }
+    },
+    "csbsBasePipelineBuildSynthCodePipelineActionRoleDefaultPolicy4F18C07C": {
+      "Type": "AWS::IAM::Policy",
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": ["codebuild:BatchGetBuilds", "codebuild:StartBuild", "codebuild:StopBuild"],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": ["csbsBasePipelineBuildSynthCdkBuildProject47934895", "Arn"]
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "PolicyName": "csbsBasePipelineBuildSynthCodePipelineActionRoleDefaultPolicy4F18C07C",
+        "Roles": [
+          {
+            "Ref": "csbsBasePipelineBuildSynthCodePipelineActionRole94272B12"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "ses-cloudwatch-synthetics/csbsBasePipeline/Build/Synth/CodePipelineActionRole/DefaultPolicy/Resource"
+      }
+    },
+    "csbsBasePipelineBuildSynthCdkBuildProjectRole4D0EE49A": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "codebuild.amazonaws.com"
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "ses-cloudwatch-synthetics/csbsBasePipeline/Build/Synth/CdkBuildProject/Role/Resource"
+      }
+    },
+    "csbsBasePipelineBuildSynthCdkBuildProjectRoleDefaultPolicy5006D9DD": {
+      "Type": "AWS::IAM::Policy",
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": ["logs:CreateLogGroup", "logs:CreateLogStream", "logs:PutLogEvents"],
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":logs:us-east-1:************:log-group:/aws/codebuild/",
+                      {
+                        "Ref": "csbsBasePipelineBuildSynthCdkBuildProject47934895"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":logs:us-east-1:************:log-group:/aws/codebuild/",
+                      {
+                        "Ref": "csbsBasePipelineBuildSynthCdkBuildProject47934895"
+                      },
+                      ":*"
+                    ]
+                  ]
+                }
+              ]
+            },
+            {
+              "Action": [
+                "codebuild:CreateReportGroup",
+                "codebuild:CreateReport",
+                "codebuild:UpdateReport",
+                "codebuild:BatchPutTestCases",
+                "codebuild:BatchPutCodeCoverages"
+              ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition"
+                    },
+                    ":codebuild:us-east-1:************:report-group/",
+                    {
+                      "Ref": "csbsBasePipelineBuildSynthCdkBuildProject47934895"
+                    },
+                    "-*"
+                  ]
+                ]
+              }
+            },
+            {
+              "Action": "ecr:GetAuthorizationToken",
+              "Effect": "Allow",
+              "Resource": "*"
+            },
+            {
+              "Action": ["s3:GetObject*", "s3:GetBucket*", "s3:List*", "s3:DeleteObject*", "s3:PutObject", "s3:Abort*"],
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::GetAtt": ["csbsBasePipelineArtifactsBucket585E8292", "Arn"]
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      {
+                        "Fn::GetAtt": ["csbsBasePipelineArtifactsBucket585E8292", "Arn"]
+                      },
+                      "/*"
+                    ]
+                  ]
+                }
+              ]
+            },
+            {
+              "Action": ["kms:Decrypt", "kms:DescribeKey", "kms:Encrypt", "kms:ReEncrypt*", "kms:GenerateDataKey*"],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": ["csbsBasePipelineArtifactsBucketEncryptionKey7ABA67C1", "Arn"]
+              }
+            },
+            {
+              "Action": ["kms:Decrypt", "kms:Encrypt", "kms:ReEncrypt*", "kms:GenerateDataKey*"],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": ["csbsBasePipelineArtifactsBucketEncryptionKey7ABA67C1", "Arn"]
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "PolicyName": "csbsBasePipelineBuildSynthCdkBuildProjectRoleDefaultPolicy5006D9DD",
+        "Roles": [
+          {
+            "Ref": "csbsBasePipelineBuildSynthCdkBuildProjectRole4D0EE49A"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "ses-cloudwatch-synthetics/csbsBasePipeline/Build/Synth/CdkBuildProject/Role/DefaultPolicy/Resource"
+      }
+    },
+    "csbsBasePipelineBuildSynthCdkBuildProject47934895": {
+      "Type": "AWS::CodeBuild::Project",
+      "Properties": {
+        "Artifacts": {
+          "Type": "CODEPIPELINE"
+        },
+        "Environment": {
+          "ComputeType": "BUILD_GENERAL1_SMALL",
+          "Image": "aws/codebuild/standard:4.0",
+          "ImagePullCredentialsType": "CODEBUILD",
+          "PrivilegedMode": true,
+          "Type": "LINUX_CONTAINER"
+        },
+        "ServiceRole": {
+          "Fn::GetAtt": ["csbsBasePipelineBuildSynthCdkBuildProjectRole4D0EE49A", "Arn"]
+        },
+        "Source": {
+          "BuildSpec": "{\n  \"version\": \"0.2\",\n  \"phases\": {\n    \"pre_build\": {\n      \"commands\": [\n        \"npm install -g aws-cdk cdk-assume-role-credential-plugin\",\n        \"pip3 install --upgrade wheel setuptools pip\",\n        \"pip3 --disable-pip-version-check --no-cache-dir install --pre --upgrade poetry\",\n        \"poetry config virtualenvs.create false && poetry install --no-interaction --no-ansi\"\n      ]\n    },\n    \"build\": {\n      \"commands\": [\n        \"cdk synth\"\n      ]\n    }\n  },\n  \"artifacts\": {\n    \"base-directory\": \"cdk.out\",\n    \"files\": \"**/*\"\n  }\n}",
+          "Type": "CODEPIPELINE"
+        },
+        "EncryptionKey": {
+          "Fn::GetAtt": ["csbsBasePipelineArtifactsBucketEncryptionKey7ABA67C1", "Arn"]
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "ses-cloudwatch-synthetics/csbsBasePipeline/Build/Synth/CdkBuildProject/Resource"
+      }
+    },
+    "csbsBasePipelineUpdatePipelineSelfMutateCodePipelineActionRoleFCF31BBA": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "AWS": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":iam::************:root"
+                    ]
+                  ]
+                }
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "ses-cloudwatch-synthetics/csbsBasePipeline/UpdatePipeline/SelfMutate/CodePipelineActionRole/Resource"
+      }
+    },
+    "csbsBasePipelineUpdatePipelineSelfMutateCodePipelineActionRoleDefaultPolicy6F8F850E": {
+      "Type": "AWS::IAM::Policy",
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": ["codebuild:BatchGetBuilds", "codebuild:StartBuild", "codebuild:StopBuild"],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": ["csbsCdkPipelineUpdatePipelineSelfMutationE8151C15", "Arn"]
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "PolicyName": "csbsBasePipelineUpdatePipelineSelfMutateCodePipelineActionRoleDefaultPolicy6F8F850E",
+        "Roles": [
+          {
+            "Ref": "csbsBasePipelineUpdatePipelineSelfMutateCodePipelineActionRoleFCF31BBA"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "ses-cloudwatch-synthetics/csbsBasePipeline/UpdatePipeline/SelfMutate/CodePipelineActionRole/DefaultPolicy/Resource"
+      }
+    },
+    "csbsCdkPipelineUpdatePipelineSelfMutationRoleEBABAED7": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "codebuild.amazonaws.com"
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "ses-cloudwatch-synthetics/csbsCdkPipeline/UpdatePipeline/SelfMutation/Role/Resource"
+      }
+    },
+    "csbsCdkPipelineUpdatePipelineSelfMutationRoleDefaultPolicyCF82FEDA": {
+      "Type": "AWS::IAM::Policy",
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": ["logs:CreateLogGroup", "logs:CreateLogStream", "logs:PutLogEvents"],
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":logs:us-east-1:************:log-group:/aws/codebuild/",
+                      {
+                        "Ref": "csbsCdkPipelineUpdatePipelineSelfMutationE8151C15"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":logs:us-east-1:************:log-group:/aws/codebuild/",
+                      {
+                        "Ref": "csbsCdkPipelineUpdatePipelineSelfMutationE8151C15"
+                      },
+                      ":*"
+                    ]
+                  ]
+                }
+              ]
+            },
+            {
+              "Action": [
+                "codebuild:CreateReportGroup",
+                "codebuild:CreateReport",
+                "codebuild:UpdateReport",
+                "codebuild:BatchPutTestCases",
+                "codebuild:BatchPutCodeCoverages"
+              ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition"
+                    },
+                    ":codebuild:us-east-1:************:report-group/",
+                    {
+                      "Ref": "csbsCdkPipelineUpdatePipelineSelfMutationE8151C15"
+                    },
+                    "-*"
+                  ]
+                ]
+              }
+            },
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Resource": ["arn:*:iam::*:role/*-deploy-role-*", "arn:*:iam::*:role/*-publishing-role-*"]
+            },
+            {
+              "Action": "cloudformation:DescribeStacks",
+              "Effect": "Allow",
+              "Resource": "*"
+            },
+            {
+              "Action": "s3:ListBucket",
+              "Effect": "Allow",
+              "Resource": "*"
+            },
+            {
+              "Action": ["s3:GetObject*", "s3:GetBucket*", "s3:List*"],
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::GetAtt": ["csbsBasePipelineArtifactsBucket585E8292", "Arn"]
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      {
+                        "Fn::GetAtt": ["csbsBasePipelineArtifactsBucket585E8292", "Arn"]
+                      },
+                      "/*"
+                    ]
+                  ]
+                }
+              ]
+            },
+            {
+              "Action": ["kms:Decrypt", "kms:DescribeKey"],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": ["csbsBasePipelineArtifactsBucketEncryptionKey7ABA67C1", "Arn"]
+              }
+            },
+            {
+              "Action": ["kms:Decrypt", "kms:Encrypt", "kms:ReEncrypt*", "kms:GenerateDataKey*"],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": ["csbsBasePipelineArtifactsBucketEncryptionKey7ABA67C1", "Arn"]
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "PolicyName": "csbsCdkPipelineUpdatePipelineSelfMutationRoleDefaultPolicyCF82FEDA",
+        "Roles": [
+          {
+            "Ref": "csbsCdkPipelineUpdatePipelineSelfMutationRoleEBABAED7"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "ses-cloudwatch-synthetics/csbsCdkPipeline/UpdatePipeline/SelfMutation/Role/DefaultPolicy/Resource"
+      }
+    },
+    "csbsCdkPipelineUpdatePipelineSelfMutationE8151C15": {
+      "Type": "AWS::CodeBuild::Project",
+      "Properties": {
+        "Artifacts": {
+          "Type": "CODEPIPELINE"
+        },
+        "Environment": {
+          "ComputeType": "BUILD_GENERAL1_SMALL",
+          "Image": "aws/codebuild/standard:4.0",
+          "ImagePullCredentialsType": "CODEBUILD",
+          "PrivilegedMode": false,
+          "Type": "LINUX_CONTAINER"
+        },
+        "ServiceRole": {
+          "Fn::GetAtt": ["csbsCdkPipelineUpdatePipelineSelfMutationRoleEBABAED7", "Arn"]
+        },
+        "Source": {
+          "BuildSpec": "{\n  \"version\": \"0.2\",\n  \"phases\": {\n    \"install\": {\n      \"commands\": \"npm install -g aws-cdk\"\n    },\n    \"build\": {\n      \"commands\": [\n        \"cdk -a . deploy ses-cloudwatch-synthetics --require-approval=never --verbose\"\n      ]\n    }\n  }\n}",
+          "Type": "CODEPIPELINE"
+        },
+        "EncryptionKey": {
+          "Fn::GetAtt": ["csbsBasePipelineArtifactsBucketEncryptionKey7ABA67C1", "Arn"]
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "ses-cloudwatch-synthetics/csbsCdkPipeline/UpdatePipeline/SelfMutation/Resource"
+      }
+    },
+    "CDKMetadata": {
+      "Type": "AWS::CDK::Metadata",
+      "Properties": {
+        "Analytics": "v2:deflate64:H4sIAAAAAAAAE01QyVIDIRD9ltw7xFQu5maco5epsfwAhFY7zMAUi1aK4t9lG+PpLXTzHhzZ+ZE97J74j9sLqQ5RGIssvnouFEzoTLACYTDaeRuEh+FDb26CshTxG7V3LE5hxnqcMQHxJVumWwVHM5O4FdlYAmEkrrTiTDpHjp3Vic4TqCVf/YJ1r8BlJu6KqCSBO7H4HITCWq2zBvfA/7rFvgea5T1ztOaK7XWdpgRbtVxgkOqv3tsqucdNXoQnoyEP5C/7xLw23vyX0YcTO7Pj7uqI9jZoTwuyqeEvAsKbn3MBAAA="
+      },
+      "Metadata": {
+        "aws:cdk:path": "ses-cloudwatch-synthetics/CDKMetadata/Default"
+      }
+    }
+  },
+  "Parameters": {
+    "BootstrapVersion": {
+      "Type": "AWS::SSM::Parameter::Value<String>",
+      "Default": "/cdk-bootstrap/hnb659fds/version",
+      "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store."
+    }
+  },
+  "Rules": {
+    "CheckBootstrapVersion": {
+      "Assertions": [
+        {
+          "Assert": {
+            "Fn::Not": [
+              {
+                "Fn::Contains": [
+                  ["1", "2", "3"],
+                  {
+                    "Ref": "BootstrapVersion"
+                  }
+                ]
+              }
+            ]
+          },
+          "AssertDescription": "CDK bootstrap stack version 4 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI."
+        }
+      ]
+    }
+  }
+}
